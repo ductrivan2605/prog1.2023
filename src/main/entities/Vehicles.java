@@ -1,6 +1,6 @@
 package main.entities;
 
-import java.awt.*;
+import java.util.List;
 
 public interface Vehicles {
     String getVehicleId();
@@ -35,6 +35,9 @@ public interface Vehicles {
 
     void setVehicleType(VehicleType vehicleType);
 
+    void moveToPort(Port targetPort);
+
+    void refuel(double amount);
     // Enum to represent vehicle types
     enum VehicleType {
         SHIP,
@@ -45,8 +48,12 @@ public interface Vehicles {
     double calculateRequiredFuel(double distance);
 
     // Method to load containers onto the vehicle
-    void loadContainer(Container container);
+    void loadContainer(Containers container);
 
     // Method to unload containers from the vehicle
-    void unloadContainer(Container container);
+    void unloadContainer(Containers container);
+
+    double calculateDailyFuelConsumption();
+
+    List<Containers> getLoadedContainers();
 }

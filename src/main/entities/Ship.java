@@ -1,6 +1,5 @@
 package main.entities;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class Ship implements Vehicles {
     private Port currentPort;
     private int totalContainers;
     private VehicleType vehicleType;
-    private List<Container> loadedContainers;
+    private List<Containers> loadedContainers;
 
     public Ship(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort) {
         this.vehicleId = vehicleId;
@@ -100,25 +99,89 @@ public class Ship implements Vehicles {
         this.vehicleType = vehicleType;
     }
 
-    public List<Container> getLoadedContainers() {
+    public List<Containers> getLoadedContainers() {
         return loadedContainers;
     }
-
-    // Method to load containers onto the ship
     @Override
-    public void loadContainer(Container container) {
+    public void loadContainer(Containers container) {
         // Add the container to the list of loaded containers
         loadedContainers.add(container);
         // Update the total container count
         totalContainers++;
     }
 
-    // Method to unload containers from the ship
     @Override
-    public void unloadContainer(Container container) {
+    public void unloadContainer(Containers container) {
         // Remove the container from the list of loaded containers
         loadedContainers.remove(container);
         // Update the total container count
         totalContainers--;
+    }
+    @Override
+    public void moveToPort(Port targetPort) {
+        if (!targetPort.hasLandingAbilityFor(getVehicleType())) {
+            // The target port doesn't have landing ability for this type of vehicle
+            System.out.println("Ship " + getVehicleId() + " cannot move to " + targetPort.getName() + ".");
+            return;
+        }
+
+        if (canMoveToPort(targetPort)) {
+            // Implement the logic to move the ship to the target port
+            // You can update the current port and other relevant information
+            setCurrentPort(targetPort);
+            System.out.println("Ship " + getVehicleId() + " has moved to " + targetPort.getName() + ".");
+        } else {
+            System.out.println("Ship " + getVehicleId() + " cannot move to " + targetPort.getName() + " due to load capacity.");
+        }
+    }
+
+    private boolean canMoveToPort(Port targetPort) {
+        // Calculate the total weight of loaded containers
+        double loadedWeight = calculateLoadedContainerWeight();
+
+        // Check if the target port has sufficient storing capacity
+        if (loadedWeight > targetPort.getStoringCapacity()) {
+            return false;
+        }
+
+        // You can add additional conditions specific to ships if needed
+
+        return true;
+    }
+
+    private double calculateLoadedContainerWeight() {
+        // Calculate and return the total weight of loaded containers
+        double loadedWeight = 0.0;
+        for (Containers container : loadedContainers) {
+            loadedWeight += container.getWeight();
+        }
+        return loadedWeight;
+    }
+    @Override
+    public void refuel(double amount) {
+        if (amount > 0) {
+            double newFuelLevel = getCurrentFuel() + amount;
+            if (newFuelLevel <= getFuelCapacity()) {
+                setCurrentFuel(newFuelLevel);
+                System.out.println("Ship refueled successfully. Current fuel level: " + newFuelLevel);
+            } else {
+                System.out.println("Refueling failed. Fuel tank capacity exceeded.");
+            }
+        } else {
+            System.out.println("Invalid refueling amount.");
+        }
+    }
+    public double calculateDailyFuelConsumption() {
+        double dailyFuelConsumption = 0.0;
+
+        // Calculate daily fuel consumption for ships
+        dailyFuelConsumption = calculateDailyFuelConsumptionForShip();
+
+        return dailyFuelConsumption;
+    }
+
+    private double calculateDailyFuelConsumptionForShip() {
+        // Calculate daily fuel consumption for ships
+        return 100.0;
     }
 }

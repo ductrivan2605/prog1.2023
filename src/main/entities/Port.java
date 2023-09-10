@@ -1,7 +1,11 @@
 package main.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import main.entities.Vehicles.VehicleType;
 
 public class Port {
     private String id; // Unique ID (formatted as p-number)
@@ -14,6 +18,7 @@ public class Port {
     private int vehicleCount;
     private List<Trip> pastTrips;
     private List<Trip> currentTrips;
+    private Set<VehicleType> allowedVehicleTypes = new HashSet<>();
     private static final double EARTH_RADIUS_KM = 6371.0;
 
     public Port(String id, String name, double latitude, double longitude, int storingCapacity, boolean landingAbility) {
@@ -50,7 +55,7 @@ public class Port {
         return storingCapacity;
     }
 
-    public boolean hasLandingAbility() {
+    public boolean isLandingAbility() {
         return landingAbility;
     }
 
@@ -85,7 +90,21 @@ public class Port {
             vehicleCount--;
         }
     }
+    public Set<VehicleType> getAllowedVehicleTypes() {
+        return allowedVehicleTypes;
+    }
 
+    public void addAllowedVehicleType(VehicleType vehicleType) {
+        allowedVehicleTypes.add(vehicleType);
+    }
+
+    public void removeAllowedVehicleType(VehicleType vehicleType) {
+        allowedVehicleTypes.remove(vehicleType);
+    }
+    // Method to check if the port has landing ability for a specific vehicle type
+    public boolean hasLandingAbilityFor(VehicleType vehicleType) {
+        return allowedVehicleTypes.contains(vehicleType) && landingAbility;
+    }
     // Calculate the distance between this port and another port using Haversine formula
     public double calculateDistanceTo(Port otherPort) {
         double lat1 = Math.toRadians(this.latitude);
