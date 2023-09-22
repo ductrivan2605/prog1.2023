@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import main.entities.Containers.ContainerType;
 
@@ -21,11 +22,13 @@ public class PortManager implements User {
     private List<Ship> shipsUnderControl;
     private List<Trip> trips;
     private List<Trip> tripsUnderControl;
+    private Scanner scanner;
 
     public PortManager(String username, String password, String portName) {
         this.username = username;
         this.password = password;
         this.portName = portName;
+        this.scanner = scanner;
         this.managedPortNames = new ArrayList<>();
         this.allowedViewHistoryPorts = new ArrayList<>();
         allowedViewHistoryPorts.add("PortA");
@@ -132,21 +135,34 @@ public class PortManager implements User {
         return shipsInPort;
     }
     @Override
-    public List<Trip> listTripsInDay(Date date) {
-        List<Trip> tripsInDay = new ArrayList<>();
+public List<Trip> listTripsInDay(Date date) {
+    List<Trip> tripsInDay = new ArrayList<>();
+    
+    // Create a Scanner to input the desired departure date from the user
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter the departure date (yyyy-MM-dd): ");
+    String inputDateStr = scanner.nextLine();
 
+    try {
+        LocalDate inputDate = LocalDate.parse(inputDateStr);
+        
         for (Trip trip : trips) {
-            if (isSameDay(trip.getDepartureDate(), date) || isSameDay(trip.getArrivalDate(), date)) {
+            if (isSameDay(trip.getDepartureDate(), inputDate) || isSameDay(trip.getArrivalDate(), inputDate)) {
                 tripsInDay.add(trip);
             }
         }
-
-        return tripsInDay;
+    } catch (Exception e) {
+        System.out.println("Invalid date format. Please use yyyy-MM-dd format.");
+    } finally {
+        scanner.close(); // Close the scanner when done
     }
-    private boolean isSameDay(Date date1, Date date2) {
+
+    return tripsInDay;
+}
+    private boolean isSameDay(Date date1, LocalDate inputDate) {
     // Convert the Date objects to LocalDate
     LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    LocalDate localDate2 = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
     // Check if the LocalDate objects represent the same day
     return localDate1.isEqual(localDate2);
