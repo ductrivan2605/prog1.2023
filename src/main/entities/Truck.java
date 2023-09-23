@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
-public class Truck implements Vehicles,Serializable {
+public class Truck implements Vehicles, Serializable {
     private String vehicleId;
     private String name;
     private double currentFuel;
