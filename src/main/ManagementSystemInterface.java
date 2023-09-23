@@ -82,8 +82,7 @@ public class ManagementSystemInterface {
                 }
             }
         }
-    }private static User UserRole = UserRole.PORT_MANAGER;
-
+    }
     private static void displayMainMenu() {
         System.out.println("Container Port Management System - Main Menu");
         System.out.println("1. Add an Entity");
@@ -92,14 +91,10 @@ public class ManagementSystemInterface {
         System.out.println("4. Load/Unload Container");
         System.out.println("5. Move Vehicle to Port");
         System.out.println("6. Refuel Vehicle");
-
-        if (isLoggedIn) {
-            System.out.println("7. Statistics Operations");
-        }
-
+        System.out.println("7. Statistics Operations");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
-    }
+    }private static User UserRole = UserRole.PORT_MANAGER;
 
     private static int getUserChoice(Scanner scanner) {
         try {
