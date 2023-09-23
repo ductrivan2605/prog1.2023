@@ -7,7 +7,7 @@ import main.entities.Admin;
 import main.entities.PortManager;
 import main.entities.User;
 
-public class ManagementSystemInterface {
+public class Main {
 
     private static boolean isLoggedIn = false;
     private static List<User> users = new ArrayList<>();
