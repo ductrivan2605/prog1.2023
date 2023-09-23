@@ -11,6 +11,8 @@ public class ManagementSystemInterface {
 
     private static boolean isLoggedIn = false;
     private static List<User> users = new ArrayList<>();
+    private static User loggedInUser = null; // Store the logged-in user object
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -23,17 +25,21 @@ public class ManagementSystemInterface {
 
         Admin adminUser = new Admin("admin", "adminpassword");
 
-        users.add((User) portManager1);
-        users.add((User) portManager2);
-        users.add((User) portManager3);
-        users.add((User) portManager4);
-        users.add((User) portManager5);
-        users.add((User) adminUser);
+        users.add(portManager1);
+        users.add(portManager2);
+        users.add(portManager3);
+        users.add(portManager4);
+        users.add(portManager5);
+        users.add(adminUser);
 
         while (true) {
             if (!isLoggedIn) {
                 // If not logged in, ask the user to log in
-                login(scanner);
+                loggedInUser = login(scanner);
+                if (loggedInUser != null) {
+                    isLoggedIn = true;
+                    System.out.println("Logged in successfully as " + loggedInUser.getRole());
+                }
             } else {
                 // If logged in, display the main menu and handle menu choices
                 displayMainMenu();
@@ -66,11 +72,12 @@ public class ManagementSystemInterface {
                         break;
                     case 7:
                         // Statistics operations - can only be accessed if logged in
-                        if (isLoggedIn) {
-                            // Implement statistics functionality here
-                            System.out.println("Accessing statistics operations...");
-                        } else {
-                            System.out.println("You must log in to access statistics operations.");
+                        if ("admin".equals(loggedInUser.getRole())) {
+                            // Implement admin statistics functionality here
+                            System.out.println("Accessing admin statistics operations...");
+                        } else if ("portmanager".equals(loggedInUser.getRole())) {
+                            // Implement port manager statistics functionality here
+                            System.out.println("Accessing port manager statistics operations...");
                         }
                         break;
                     case 8:
@@ -82,7 +89,7 @@ public class ManagementSystemInterface {
                 }
             }
         }
-    }private static User UserRole = UserRole.PORT_MANAGER;
+    }
 
     private static void displayMainMenu() {
         System.out.println("Container Port Management System - Main Menu");
@@ -110,7 +117,7 @@ public class ManagementSystemInterface {
         }
     }
 
-    private static void login(Scanner scanner) {
+    private static User login(Scanner scanner) {
         System.out.print("Enter your username: ");
         String username = scanner.next();
         System.out.print("Enter your password: ");
@@ -118,15 +125,11 @@ public class ManagementSystemInterface {
 
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                isLoggedIn = true;
-                loggedInUserRole = user.getRole();
-                System.out.println("Logged in successfully as " + loggedInUserRole);
-                return;
+                return user;
             }
         }
 
         System.out.println("Login failed. Please check your username and password.");
+        return null; // Return null to indicate login failure
     }
-
-
 }

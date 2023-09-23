@@ -228,8 +228,8 @@ public class Port {
                     ports.add(port);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
         }
         return ports;
     }
