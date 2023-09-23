@@ -23,6 +23,7 @@ public class Main {
         PortManager portManager4 = new PortManager("portmanager4", "password4", "PortD");
         PortManager portManager5 = new PortManager("portmanager5", "password5", "PortE");
 
+        // Create Admin user
         Admin adminUser = new Admin("admin", "adminpassword");
 
         users.add(portManager1);
@@ -47,40 +48,56 @@ public class Main {
 
                 switch (choice) {
                     case 1:
-                        // Add a new entity (Vehicle, Port, Container, Manager)
-                        // Implement this functionality
-                        break;
-                    case 2:
-                        // Remove an entity (Vehicle, Port, Container, Manager)
-                        // Implement this functionality
-                        break;
-                    case 3:
-                        // CRUD operations
-                        // Implement this functionality
-                        break;
-                    case 4:
-                        // Load/Unload container from a vehicle
-                        // Implement this functionality
-                        break;
-                    case 5:
-                        // Move a vehicle to a port
-                        // Implement this functionality
-                        break;
-                    case 6:
-                        // Refuel a vehicle
-                        // Implement this functionality
-                        break;
-                    case 7:
-                        // Statistics operations - can only be accessed if logged in
-                        if ("admin".equals(loggedInUser.getRole())) {
-                            // Implement admin statistics functionality here
-                            System.out.println("Accessing admin statistics operations...");
-                        } else if ("portmanager".equals(loggedInUser.getRole())) {
-                            // Implement port manager statistics functionality here
-                            System.out.println("Accessing port manager statistics operations...");
+                        // Manage Vehicles
+                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                            // Implement Port Manager's Manage Vehicles functionality here
+                            System.out.println("Accessing Port Manager's Manage Vehicles...");
+                        } else if ("Admin".equals(loggedInUser.getRole())) {
+                            // Implement Admin's Manage Vehicles functionality here
+                            System.out.println("Accessing Admin's Manage Vehicles...");
                         }
                         break;
-                    case 8:
+                    case 2:
+                        // Manage Containers
+                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                            // Implement Port Manager's Manage Containers functionality here
+                            System.out.println("Accessing Port Manager's Manage Containers...");
+                        } else if ("Admin".equals(loggedInUser.getRole())) {
+                            // Implement Admin's Manage Containers functionality here
+                            System.out.println("Accessing Admin's Manage Containers...");
+                        }
+                        break;
+                    case 3:
+                        // Manage Ports
+                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                            // Implement Port Manager's Manage Ports functionality here
+                            System.out.println("Accessing Port Manager's Manage Ports...");
+                        } else if ("Admin".equals(loggedInUser.getRole())) {
+                            // Implement Admin's Manage Ports functionality here
+                            System.out.println("Accessing Admin's Manage Ports...");
+                        }
+                        break;
+                    case 4:
+                        // View History
+                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                            // Implement Port Manager's View History functionality here
+                            System.out.println("Accessing Port Manager's View History...");
+                        } else if ("Admin".equals(loggedInUser.getRole())) {
+                            // Implement Admin's View History functionality here
+                            System.out.println("Accessing Admin's View History...");
+                        }
+                        break;
+                    case 5:
+                        // Statistics Operations
+                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                            // Implement Port Manager's Statistics Operations functionality here
+                            System.out.println("Accessing Port Manager's Statistics Operations...");
+                        } else if ("Admin".equals(loggedInUser.getRole())) {
+                            // Implement Admin's Statistics Operations functionality here
+                            System.out.println("Accessing Admin's Statistics Operations...");
+                        }
+                        break;
+                    case 0:
                         // Exit the program
                         System.out.println("Exiting the Container Port Management System.");
                         System.exit(0);
@@ -93,15 +110,20 @@ public class Main {
 
     private static void displayMainMenu() {
         System.out.println("Container Port Management System - Main Menu");
-        System.out.println("1. Add an Entity");
-        System.out.println("2. Remove an Entity");
-        System.out.println("3. CRUD Operations");
-        System.out.println("4. Load/Unload Container");
-        System.out.println("5. Move Vehicle to Port");
-        System.out.println("6. Refuel Vehicle");
 
-        if (isLoggedIn) {
-            System.out.println("7. Statistics Operations");
+        if ("Port Manager".equals(loggedInUser.getRole())) {
+            System.out.println("1. Manage Vehicles");
+            System.out.println("2. Manage Containers");
+            System.out.println("3. Manage Ports");
+            System.out.println("4. View History");
+            System.out.println("5. Statistics Operations");
+        } else if ("Admin".equals(loggedInUser.getRole())) {
+            System.out.println("1. Manage Vehicles");
+            System.out.println("2. Manage Containers");
+            System.out.println("3. Manage Ports");
+            System.out.println("4. Manage Port Managers");
+            System.out.println("5. View History");
+            System.out.println("6. Statistics Operations");
         }
 
         System.out.println("0. Exit");
