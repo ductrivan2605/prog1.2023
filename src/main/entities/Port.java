@@ -1,8 +1,12 @@
 package main.entities;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import main.entities.Vehicles.VehicleType;
@@ -64,15 +68,9 @@ public class Port {
     public int getContainerCount() {
         return containerCount;
     }
-    public void setContainerCount(){
-        this.containerCount = containerCount;
-    }
 
     public int getVehicleCount() {
         return vehicleCount;
-    }
-    public void setVehicleCount() {
-        this.vehicleCount = vehicleCount;
     }
     // Get the list of past trips
     public List<Trip> getPastTrips() {
@@ -86,8 +84,32 @@ public class Port {
     public PortManager getPortManager() {
         return portManager;
     }
-    public void setPortManager(){
-        this.portManager = portManager;
+    //Setters 
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+    
+    public void setStoringCapacity(double storingCapacity) {
+        this.storingCapacity = storingCapacity;
+    }
+    
+    public void setLandingAbility(boolean landingAbility) {
+        this.landingAbility = landingAbility;
+    }    
+    public void setAllowedVehicleTypes(Set<VehicleType> allowedVehicleTypes) {
+        this.allowedVehicleTypes = allowedVehicleTypes;
     }
     // Add a trip to the list of past trips
     public void addPastTrip(Trip trip) {
@@ -120,6 +142,20 @@ public class Port {
         if (vehicleCount > 0) {
             vehicleCount--;
         }
+    }
+    // Set the container count
+    public void setContainerCount(int containerCount) {
+        this.containerCount = containerCount;
+    }
+
+    // Set the vehicle count
+    public void setVehicleCount(int vehicleCount) {
+        this.vehicleCount = vehicleCount;
+    }
+
+    // Set the port manager
+    public void setPortManager(PortManager portManager) {
+        this.portManager = portManager;
     }
     public Set<VehicleType> getAllowedVehicleTypes() {
         return allowedVehicleTypes;
@@ -168,4 +204,107 @@ public class Port {
     public boolean isManagedByPortManager() {
         return portManager != null;
     }
+    public static List<Port> loadPorts(String filePath, List<PortManager> portManagers) {
+        List<Port> ports = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File(filePath))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] data = line.split(",");
+                if (data.length == 9) {
+                    String id = data[0].trim();
+                    String name = data[1].trim();
+                    double latitude = Double.parseDouble(data[2].trim());
+                    double longitude = Double.parseDouble(data[3].trim());
+                    double storingCapacity = Double.parseDouble(data[4].trim());
+                    boolean landingAbility = Boolean.parseBoolean(data[5].trim());
+                    int containerCount = Integer.parseInt(data[6].trim());
+                    int vehicleCount = Integer.parseInt(data[7].trim());
+                    String managerUsername = data[8].trim();
+                    PortManager portManager = findPortManagerByUsername(managerUsername, portManagers);
+                    Port port = new Port(id, name,latitude,longitude,storingCapacity, landingAbility);
+                    port.setContainerCount(containerCount);
+                    port.setVehicleCount(vehicleCount);
+                    port.setPortManager(portManager);
+                    ports.add(port);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ports;
+    }
+
+    // Save ports to a CSV file
+    public static void savePorts(List<Port> ports, String filePath) {
+        try (PrintWriter writer = new PrintWriter(new File(filePath))) {
+            for (Port port : ports) {
+                String data = String.format("%s,%s,%.6f,%.6f,%.2f,%b,%d,%d,%s",
+                        port.getId(), port.getName(), port.getLatitude(), port.getLongitude(),
+                        port.getStoringCapacity(), port.isLandingAbility(), port.getContainerCount(),
+                        port.getVehicleCount(), port.getPortManager().getUsername());
+                writer.println(data);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    // Find a PortManager by username
+public static PortManager findPortManagerByUsername(String username, List<PortManager> portManagers) {
+    for (PortManager portManager : portManagers) {
+        if (portManager.getUsername().equals(username)) {
+            return portManager;
+        }
+    }
+    // Return null if the PortManager is not found
+    return null;
+    }
+public static void deletePort(List<Port> ports, String portId, String filePath) {
+    // Find the port with the given ID
+    Port portToDelete = null;
+    for (Port port : ports) {
+        if (port.getId().equals(portId)) {
+            portToDelete = port;
+            break;
+        }
+    }
+
+    // If the port is found, remove it from the list
+    if (portToDelete != null) {
+        ports.remove(portToDelete);
+
+        // Save the updated list of ports to the data file
+        savePorts(ports, filePath);
+
+        System.out.println("Port with ID " + portId + " has been deleted.");
+    } else {
+        System.out.println("Port with ID " + portId + " not found.");
+    }
+    }
+    public static void updatePort(List<Port> ports, String portId, String newName, double newLatitude,
+                              double newLongitude, double newStoringCapacity, boolean newLandingAbility, String managerUsername,
+                              String filePath) {
+    // Find the port with the given ID
+    Port portToUpdate = null;
+    for (Port port : ports) {
+        if (port.getId().equals(portId)) {
+            portToUpdate = port;
+            break;
+        }
+    }
+
+    // If the port is found, update its properties
+    if (portToUpdate != null) {
+        portToUpdate.setName(newName);
+        portToUpdate.setLatitude(newLatitude);
+        portToUpdate.setLongitude(newLongitude);
+        portToUpdate.setStoringCapacity(newStoringCapacity);
+        portToUpdate.setLandingAbility(newLandingAbility);
+        // Save the updated list of ports to the data file
+        savePorts(ports, filePath);
+
+        System.out.println("Port with ID " + portId + " has been updated.");
+    } else {
+        System.out.println("Port with ID " + portId + " not found.");
+    }
+}
 }

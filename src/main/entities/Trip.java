@@ -1,5 +1,19 @@
 package main.entities;
+// import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+// import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+// import java.text.ParseException;
+// import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+// import java.util.Locale;
+
+// import main.entities.Vehicles;
 
 public class Trip {
     private String tripId;
@@ -8,7 +22,7 @@ public class Trip {
     private Date arrivalDate;
     private Port departurePort;
     private Port arrivalPort;
-    private TripStatus status;
+    private static TripStatus status;
 
     public Trip(String tripId, Vehicles vehicle, Date departureDate, Date arrivalDate, Port departurePort, Port arrivalPort, TripStatus status) {
         this.tripId = tripId;
@@ -17,7 +31,7 @@ public class Trip {
         this.arrivalDate = arrivalDate;
         this.departurePort = departurePort;
         this.arrivalPort = arrivalPort;
-        this.status = status;
+        Trip.status = status;
     }
 
     public String getTripId() {
@@ -49,7 +63,7 @@ public class Trip {
     }
 
     public void setStatus(TripStatus status) {
-        this.status = status;
+        Trip.status = status;
     }
     enum TripStatus {
         PLANNED,
@@ -68,4 +82,101 @@ public class Trip {
                 ", status=" + status +
                 '}';
     }
+//     // Load Trips from trips.dat
+    public static List<Trip> loadTripsFromFile(String filename) {
+        List<Trip> trips = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            trips = (List<Trip>) ois.readObject();
+            System.out.println("Trips loaded from " + filename);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return trips;
+    }
+     // Save a list of Trip objects to a file
+    public static void saveTripsToFile(List<Trip> trips, String filename) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(trips);
+            System.out.println("Trips saved to " + filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    // Update a trip in a list by its tripId
+    public static boolean updateTrip(List<Trip> trips, String tripId, Trip updatedTrip) {
+        for (int i = 0; i < trips.size(); i++) {
+            if (trips.get(i).getTripId().equals(tripId)) {
+                trips.set(i, updatedTrip);
+                return true; // Trip updated successfully
+            }
+        }
+        return false; // Trip not found
+    }
+    // Delete a trip from a list by its tripId
+    public static boolean deleteTrip(List<Trip> trips, String tripId) {
+        Trip tripToDelete = null;
+        for (Trip trip : trips) {
+            if (trip.getTripId().equals(tripId)) {
+                tripToDelete = trip;
+                break;
+            }
+        }
+        if (tripToDelete != null) {
+            trips.remove(tripToDelete);
+            return true; // Trip deleted successfully
+        }
+        return false; // Trip not found
+    }
+// This is AI generated solution for loading trips
+//     public static List<Trip> loadTrips(String filePath, List<Port> ports, List<Vehicles> vehicles) {
+//     List<Trip> trips = new ArrayList<>();
+//     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
+//     try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+//         String line;
+//         while ((line = reader.readLine()) != null) {
+//             String[] data = line.split(",");
+//             if (data.length == 8) {
+//                 String tripId = data[0].trim();
+//                 String vehicleId = data[1].trim();
+//                 Date departureDate = dateFormat.parse(data[2].trim());
+//                 Date arrivalDate = dateFormat.parse(data[3].trim());
+//                 String departurePortId = data[4].trim();
+//                 String arrivalPortId = data[5].trim();
+//                 String statusStr = data[6].trim();
+
+//                 Vehicles vehicle = findVehicleById(vehicleId, vehicles);
+//                 Port departurePort = findPortById(departurePortId, ports);
+//                 Port arrivalPort = findPortById(arrivalPortId, ports);
+//                 TripStatus status = TripStatus.valueOf(statusStr);
+
+//                 if (vehicle != null && departurePort != null && arrivalPort != null) {
+//                     trips.add(new Trip(tripId, vehicle, departureDate, arrivalDate, departurePort, arrivalPort, status));
+//                 }
+//             }
+//         }
+//     } catch (IOException | ParseException e) {
+//         e.printStackTrace();
+//     }
+//     return trips;
+// }
+
+//     public static Port findPortById(String portId, List<Port> ports) {
+//         for (Port port : ports) {
+//             if (port.getId().equals(portId)) {
+//                 return port;
+//             }
+//         }
+//         return null; // Port with the specified ID not found
+//     }
+    
+
+//     private static Vehicles findVehicleById(String vehicleId, List<Vehicles> vehicles) {
+//         for (Vehicles vehicle : vehicles) {
+//             if (vehicle.getVehicleId().equals(vehicleId)) {
+//                 return vehicle;
+//             }
+//         }
+//         return null;
+//     }
 }

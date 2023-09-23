@@ -56,4 +56,6 @@ public interface Vehicles {
     double calculateDailyFuelConsumption();
 
     List<Containers> getLoadedContainers();
+
+    
 }
