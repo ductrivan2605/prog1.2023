@@ -20,6 +20,7 @@ public class Port {
     private List<Trip> currentTrips;
     private Set<VehicleType> allowedVehicleTypes = new HashSet<>();
     private static final double EARTH_RADIUS_KM = 6371.0;
+    private PortManager portManager;
 
     public Port(String id, String name, double latitude, double longitude, int storingCapacity, boolean landingAbility) {
         this.id = id;
@@ -32,6 +33,7 @@ public class Port {
         this.vehicleCount = 0;
         this.pastTrips = new ArrayList<>();
         this.currentTrips = new ArrayList<>();
+        this.portManager = null;
     }
 
     // Getters and setters for properties
@@ -66,7 +68,27 @@ public class Port {
     public int getVehicleCount() {
         return vehicleCount;
     }
+    // Get the list of past trips
+    public List<Trip> getPastTrips() {
+        return pastTrips;
+    }
 
+    // Get the list of current trips
+    public List<Trip> getCurrentTrips() {
+        return currentTrips;
+    }
+    public PortManager getPortManager() {
+        return portManager;
+    }
+    // Add a trip to the list of past trips
+    public void addPastTrip(Trip trip) {
+        pastTrips.add(trip);
+    }
+
+    // Add a trip to the list of current trips
+    public void addCurrentTrip(Trip trip) {
+        currentTrips.add(trip);
+    }
     // Add a container to the port
     public void addContainer() {
         containerCount++;
@@ -120,24 +142,21 @@ public class Port {
 
         return EARTH_RADIUS_KM * c;
     }
-
-    // Add a trip to the list of past trips
-    public void addPastTrip(Trip trip) {
-        pastTrips.add(trip);
+    // Assign a PortManager to control this port
+    public void assignPortManager(PortManager portManager) {
+        if (this.portManager == null) {
+            this.portManager = portManager;
+        } else {
+            System.out.println("This port is already managed by a Port Manager.");
+        }
+    }
+    // Remove the PortManager from controlling this port
+    public void removePortManager() {
+        this.portManager = null;
     }
 
-    // Add a trip to the list of current trips
-    public void addCurrentTrip(Trip trip) {
-        currentTrips.add(trip);
-    }
-
-    // Get the list of past trips
-    public List<Trip> getPastTrips() {
-        return pastTrips;
-    }
-
-    // Get the list of current trips
-    public List<Trip> getCurrentTrips() {
-        return currentTrips;
+    // Check if this port is controlled by a Port Manager
+    public boolean isManagedByPortManager() {
+        return portManager != null;
     }
 }

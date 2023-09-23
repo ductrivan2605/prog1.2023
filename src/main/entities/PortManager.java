@@ -22,13 +22,11 @@ public class PortManager implements User {
     private List<Ship> shipsUnderControl;
     private List<Trip> trips;
     private List<Trip> tripsUnderControl;
-    private Scanner scanner;
 
     public PortManager(String username, String password, String portName) {
         this.username = username;
         this.password = password;
         this.portName = portName;
-        this.scanner = scanner;
         this.managedPortNames = new ArrayList<>();
         this.allowedViewHistoryPorts = new ArrayList<>();
         allowedViewHistoryPorts.add("PortA");
@@ -159,23 +157,56 @@ public List<Trip> listTripsInDay(Date date) {
 
     return tripsInDay;
 }
-    private boolean isSameDay(Date date1, LocalDate inputDate) {
-    // Convert the Date objects to LocalDate
+private boolean isSameDay(Date date1, LocalDate inputDate) {
+    // Convert the Date to LocalDate
     LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    LocalDate localDate2 = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-    // Check if the LocalDate objects represent the same day
-    return localDate1.isEqual(localDate2);
-    }
+    // Check if the LocalDate and the Date objects represent the same day
+    return localDate1.isEqual(inputDate);
+}
+
     @Override
     public List<Trip> listTripsBetweenDays(LocalDate dayA, LocalDate dayB) {
         List<Trip> tripsBetweenDays = new ArrayList<>();
 
         for (Trip trip : tripsUnderControl) {
-            LocalDate tripDate = trip.getDepartureDate();
-            if (tripDate != null && !tripDate.isBefore(dayA) && !tripDate.isAfter(dayB)) {
+            Date departureDate = trip.getDepartureDate();
+            LocalDate tripDate = departureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            
+            if (!tripDate.isBefore(dayA) && !tripDate.isAfter(dayB)) {
                 tripsBetweenDays.add(trip);
             }
+        }
+
+        return tripsBetweenDays;
+    }
+
+    public List<Trip> listTripsBetweenUserInputDates() {
+        List<Trip> tripsBetweenDays = new ArrayList<>();
+
+        // Create a Scanner to input the desired departure dates from the user
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the first date (yyyy-MM-dd): ");
+        String inputDateStrA = scanner.nextLine();
+        System.out.print("Enter the second date (yyyy-MM-dd): ");
+        String inputDateStrB = scanner.nextLine();
+
+        try {
+            LocalDate dateA = LocalDate.parse(inputDateStrA);
+            LocalDate dateB = LocalDate.parse(inputDateStrB);
+
+            for (Trip trip : tripsUnderControl) {
+                Date departureDate = trip.getDepartureDate();
+                LocalDate tripDate = departureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                
+                if (!tripDate.isBefore(dateA) && !tripDate.isAfter(dateB)) {
+                    tripsBetweenDays.add(trip);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd format.");
+        } finally {
+            scanner.close(); // Close the scanner when done
         }
 
         return tripsBetweenDays;

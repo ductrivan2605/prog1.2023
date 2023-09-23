@@ -16,7 +16,6 @@ public interface User {
     List<Ship> listAllShipsInPort(Port port);
     List<Trip> listTripsInDay(Date date);
     List<Trip> listTripsBetweenDays(LocalDate dayA, LocalDate dayB);
-
 }
 enum UserRole {
     ADMIN,
