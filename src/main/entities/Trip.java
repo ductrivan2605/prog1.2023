@@ -127,7 +127,7 @@ public class Trip {
         }
         return false; // Trip not found
     }
-// This is AI generated solution for loading trips
+// This is AI generated solution for loading trips but it looks too messy and my teammate cant follow up
 //     public static List<Trip> loadTrips(String filePath, List<Port> ports, List<Vehicles> vehicles) {
 //     List<Trip> trips = new ArrayList<>();
 //     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
