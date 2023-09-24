@@ -1,0 +1,6 @@
+id,name,latitude,longitude,storingCapacity,landingAbility
+A,Port A,40.7128,-74.0060,100000.0,true
+B,Port B,35.682839,-78.625946,75000.0,false
+C,Port C,51.5074,-0.1278,90000.0,true
+D,Port D,34.0522,-118.2437,120000.0,false
+E,Port E,48.8566,2.3522,80000.0,true
