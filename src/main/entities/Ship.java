@@ -1,14 +1,7 @@
 package main.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.util.*;
+import java.io.*;
 
 public class Ship extends Vehicles {
     //constructor
@@ -133,7 +126,8 @@ public static void saveAllShips(List<Ship> ships, String filename) {
         }
     }
 
-    private boolean canMoveToPort(Port targetPort) {
+    @Override
+    public boolean canMoveToPort(Port targetPort) {
         // Calculate the total weight of loaded containers
         double loadedWeight = calculateLoadedContainerWeight();
 
@@ -144,7 +138,7 @@ public static void saveAllShips(List<Ship> ships, String filename) {
     private double calculateLoadedContainerWeight() {
         // Calculate and return the total weight of loaded containers
         double loadedWeight = 0.0;
-        for (Containers container : loadedContainers) {
+        for (Containers container : super.getLoadedContainers()) {
             loadedWeight += container.getWeight();
         }
         return loadedWeight;
@@ -167,7 +161,7 @@ public static void saveAllShips(List<Ship> ships, String filename) {
 
     @Override
     public double calculateDailyFuelConsumption() {
-        double dailyFuelConsumption = 0.0;
+        double dailyFuelConsumption;
 
         // Calculate daily fuel consumption for ships
         dailyFuelConsumption = calculateDailyFuelConsumptionForShip();

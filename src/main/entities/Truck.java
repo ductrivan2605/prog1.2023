@@ -1,13 +1,7 @@
 package main.entities;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.Serializable;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Truck extends Vehicles {
@@ -107,17 +101,13 @@ public class Truck extends Vehicles {
         double fuelConsumptionRate = 0.0;
 
         switch (getVehicleType()) {
-            case BASIC_TRUCK:
-                fuelConsumptionRate = calculateFuelConsumptionForBasicTruck(getLoadedContainerTypes());
-                break;
-            case REEFER_TRUCK:
-                fuelConsumptionRate = calculateFuelConsumptionForReeferTruck(getLoadedContainerTypes());
-                break;
-            case TANKER_TRUCK:
-                fuelConsumptionRate = calculateFuelConsumptionForTankerTruck(getLoadedContainerTypes());
-                break;
-            default:
-                break;
+            case BASIC_TRUCK -> fuelConsumptionRate = calculateFuelConsumptionForBasicTruck(getLoadedContainerTypes());
+            case REEFER_TRUCK ->
+                    fuelConsumptionRate = calculateFuelConsumptionForReeferTruck(getLoadedContainerTypes());
+            case TANKER_TRUCK ->
+                    fuelConsumptionRate = calculateFuelConsumptionForTankerTruck(getLoadedContainerTypes());
+            default -> {
+            }
         }
 
         return fuelConsumptionRate * distance;
@@ -129,14 +119,10 @@ public class Truck extends Vehicles {
 
         for (Containers.ContainerType type : containerTypes) {
             switch (type) {
-                case DRY_STORAGE:
-                    fuelConsumptionRate += 4.6;
-                    break;
-                case OPEN_TOP, OPEN_SIDE:
-                    fuelConsumptionRate += 3.2;
-                    break;
-                default:
-                    break;
+                case DRY_STORAGE -> fuelConsumptionRate += 4.6;
+                case OPEN_TOP, OPEN_SIDE -> fuelConsumptionRate += 3.2;
+                default -> {
+                }
             }
         }
 
@@ -148,14 +134,10 @@ public class Truck extends Vehicles {
 
         for (Containers.ContainerType type : containerTypes) {
             switch (type) {
-                case DRY_STORAGE:
-                    fuelConsumptionRate += 4.6;
-                    break;
-                case REFRIGERATED:
-                    fuelConsumptionRate += 5.4;
-                    break;
-                default:
-                    break;
+                case DRY_STORAGE -> fuelConsumptionRate += 4.6;
+                case REFRIGERATED -> fuelConsumptionRate += 5.4;
+                default -> {
+                }
             }
         }
 
@@ -175,6 +157,7 @@ public class Truck extends Vehicles {
     }
 
     //Checking if a truck can move to a port based on its condition
+    @Override
     public boolean canMoveToPort(Port port) {
         // Check if the truck can move to the specified port based on its current load and the port's landing ability
         if (port.hasLandingAbilityFor(getVehicleType())) {
@@ -183,6 +166,14 @@ public class Truck extends Vehicles {
             return totalWeight <= getCarryingCapacity();
         }
         return false; // The port doesn't have landing ability for this type of truck
+    }
+
+    private double calculateTotalWeightOfLoadedContainers() {
+        double totalWeight = 0.0;
+        for (Containers container : super.getLoadedContainers()) {
+            totalWeight += container.getWeight();
+        }
+        return totalWeight;
     }
 
     @Override
@@ -228,20 +219,17 @@ public class Truck extends Vehicles {
         double dailyFuelConsumption = 0.0;
 
         switch (getVehicleType()) {
-            case BASIC_TRUCK:
+            case BASIC_TRUCK ->
                 // Calculate daily fuel consumption for basic trucks
-                dailyFuelConsumption = calculateDailyFuelConsumptionForBasicTruck();
-                break;
-            case REEFER_TRUCK:
+                    dailyFuelConsumption = calculateDailyFuelConsumptionForBasicTruck();
+            case REEFER_TRUCK ->
                 // Calculate daily fuel consumption for reefer trucks
-                dailyFuelConsumption = calculateDailyFuelConsumptionForReeferTruck();
-                break;
-            case TANKER_TRUCK:
+                    dailyFuelConsumption = calculateDailyFuelConsumptionForReeferTruck();
+            case TANKER_TRUCK ->
                 // Calculate daily fuel consumption for tanker trucks
-                dailyFuelConsumption = calculateDailyFuelConsumptionForTankerTruck();
-                break;
-            default:
-                break;
+                    dailyFuelConsumption = calculateDailyFuelConsumptionForTankerTruck();
+            default -> {
+            }
         }
 
         return dailyFuelConsumption;

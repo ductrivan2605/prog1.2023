@@ -12,9 +12,7 @@ public abstract class Vehicles {
     private double carryingCapacity;
     private double fuelCapacity;
     private Port currentPort;
-    private int totalContainers;
     private VehicleType vehicleType;
-    private List<Containers> loadedContainers;
 
     public Vehicles(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort) {
         this.vehicleId = vehicleId;
@@ -23,11 +21,12 @@ public abstract class Vehicles {
         this.carryingCapacity = carryingCapacity;
         this.fuelCapacity = fuelCapacity;
         this.currentPort = currentPort;
-        this.totalContainers = 0;
-        this.vehicleType = VehicleType.SHIP;
-        this.loadedContainers = new ArrayList<>();
+        totalContainers = 0;
+        this.vehicleType = null;
+        loadedContainers = new ArrayList<>();
     }
 
+    //getters and setters
     public String getVehicleId() {
         return vehicleId;
     }
@@ -80,27 +79,38 @@ public abstract class Vehicles {
         return totalContainers;
     }
 
-    public void setTotalContainers(int totalContainers) {
-        this.totalContainers = totalContainers;
+    public void setTotalContainers(int totalContainer) {
+        totalContainers = totalContainer;
     }
-
-    void setTotalContainers(int totalContainers);
 
     public VehicleType getVehicleType() {
         return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public List<Containers> getLoadedContainers() {
         return loadedContainers;
     }
 
-    void moveToPort(Port targetPort);
+    public void setLoadedContainers(List<Containers> loadedConatiners){
+        loadedContainers = loadedConatiners;
+    }
 
-    void refuel(double amount);
+    //methods
+
+    abstract void moveToPort(Port targetPort);
+
+    abstract boolean canMoveToPort(Port port);
+
+    abstract void refuel(double amount);
 
     // Method to calculate required fuel for a trip
-    double calculateRequiredFuel(double distance);
+    abstract double calculateRequiredFuel(double distance);
 
+    //Algorithms for load and unload containers
     // Method to load containers onto the vehicle
     public void loadContainer(Containers container) {
         // Add the container to the list of loaded containers
@@ -117,9 +127,7 @@ public abstract class Vehicles {
         totalContainers--;
     }
 
-    double calculateDailyFuelConsumption();
-
-    List<Containers> getLoadedContainers();
+    abstract double calculateDailyFuelConsumption();
 
     // Enum to represent vehicle types
     public enum VehicleType {

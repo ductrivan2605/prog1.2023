@@ -28,7 +28,7 @@ public abstract class User {
         this.vehiclesUnderControl = new ArrayList<>();
         this.shipsUnderControl = new ArrayList<>();
         this.trips = new ArrayList<>();
-        this.tripsUnderControl = new ArrayList<>();
+        tripsUnderControl = new ArrayList<>();
     }
 
     public static List<Trip> getTripsUnderControl() {
@@ -82,7 +82,7 @@ public abstract class User {
     public List<Trip> listTripsBetweenDays(LocalDate dayA, LocalDate dayB) {
         List<Trip> tripsBetweenDays = new ArrayList<>();
 
-        for (Trip trip : this.getTripsUnderControl()) {
+        for (Trip trip : tripsUnderControl) {
             Date departureDate = trip.getDepartureDate();
             LocalDate tripDate = departureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -146,7 +146,7 @@ public abstract class User {
         return localDate1.isEqual(inputDate);
     }
 
-    public List<Trip> listTripsInDay(Date date) {
+    public List<Trip> listTripsInDay() {
         List<Trip> tripsInDay = new ArrayList<>();
 
         // Create a Scanner to input the desired departure date from the user

@@ -36,7 +36,7 @@ public class Main {
         while (true) {
             if (!isLoggedIn) {
                 // If not logged in, ask the user to log in
-                loggedInUser = login(scanner);
+                loggedInUser = login();
                 if (loggedInUser != null) {
                     isLoggedIn = true;
                     System.out.println("Logged in successfully as " + loggedInUser.getRole());
@@ -44,7 +44,7 @@ public class Main {
             } else {
                 // If logged in, display the main menu and handle menu choices
                 displayMainMenu();
-                int choice = getUserChoice(scanner);
+                int choice = getUserChoice();
 
                 switch (choice) {
                     case 1: //Daily Fuel Consumption calculation.
@@ -56,7 +56,7 @@ public class Main {
                             System.out.println("5. Calculate Daily Fuel Consumption for a Tanker Truck");
                             System.out.print("Enter your choice: ");
 
-                            int fuelChoice = getUserChoice(scanner);
+                            int fuelChoice = getUserChoice();
 
                             switch (fuelChoice) {
                                 case 1:
@@ -241,7 +241,7 @@ public class Main {
                             System.out.println("2. Unload container from a Vehicle");
                             System.out.print("Enter your choice: ");
 
-                            int loadUnloadChoice = getUserChoice(scanner);
+                            int loadUnloadChoice = getUserChoice();
 
                             switch (loadUnloadChoice) {
                                 case 1:
@@ -250,7 +250,7 @@ public class Main {
                                     System.out.println("1. Ship");
                                     System.out.println("2. Truck");
                                     System.out.print("Enter your choice: ");
-                                    int vehicleChoice = getUserChoice(scanner);
+                                    int vehicleChoice = getUserChoice();
 
                                     switch (vehicleChoice) {
                                         case 1:
@@ -259,7 +259,7 @@ public class Main {
                                                 Ship ship = Ship.loadShip("ship.dat");
                                                 if (ship != null) {
                                                     // Load container to the ship
-                                                    Containers containerToLoad = selectContainerToLoad(scanner);
+                                                    Containers containerToLoad = selectContainerToLoad();
                                                     ship.loadContainer(containerToLoad);
                                                     Ship.saveShip(ship, "ship.dat"); // Save the updated ship data
                                                     System.out.println("Container loaded to the Ship.");
@@ -276,7 +276,7 @@ public class Main {
                                                 Truck truck = (Truck) Truck.loadTrucks("truck.dat");
                                                 if (truck != null) {
                                                     // Load container to the truck
-                                                    Containers containerToLoad = selectContainerToLoad(scanner);
+                                                    Containers containerToLoad = selectContainerToLoad();
                                                     truck.loadContainer(containerToLoad); // Corrected method call
                                                     Truck.saveTrucks((List<Truck>) truck, "truck.dat"); // Save the updated truck data
                                                     System.out.println("Container loaded to the Truck.");
@@ -298,7 +298,7 @@ public class Main {
                                     System.out.println("1. Ship");
                                     System.out.println("2. Truck");
                                     System.out.print("Enter your choice: ");
-                                    int vehicleChoiceUnload = getUserChoice(scanner);
+                                    int vehicleChoiceUnload = getUserChoice();
 
                                     switch (vehicleChoiceUnload) {
                                         case 1:
@@ -307,7 +307,7 @@ public class Main {
                                                 Ship ship = Ship.loadShip("ship.dat");
                                                 if (ship != null) {
                                                     // Unload container from the ship
-                                                    Containers containerToUnload = selectContainerToUnload(scanner, ship.getLoadedContainers());
+                                                    Containers containerToUnload = selectContainerToUnload(ship.getLoadedContainers());
                                                     ship.unloadContainer(containerToUnload);
                                                     Ship.saveShip(ship, "ship.dat"); // Save the updated ship data
                                                     System.out.println("Container unloaded from the Ship.");
@@ -324,7 +324,7 @@ public class Main {
                                                 Truck truck = (Truck) Truck.loadTrucks("truck.dat");
                                                 if (truck != null) {
                                                     // Unload container from the truck
-                                                    Containers containerToUnload = selectContainerToUnload(scanner, truck.getLoadedContainers());
+                                                    Containers containerToUnload = selectContainerToUnload(truck.getLoadedContainers());
                                                     truck.unloadContainer(containerToUnload); // Corrected method call
                                                     Truck.saveTrucks((List<Truck>) truck, "truck.dat"); // Save the updated truck data
                                                     System.out.println("Container unloaded from the Truck.");
@@ -558,7 +558,9 @@ public class Main {
         System.out.print("Enter your choice: ");
     }
 
-    private static int getUserChoice(Scanner scanner) {
+    private static int getUserChoice() {
+        Scanner scanner = new Scanner(System.in);
+
         try {
             return scanner.nextInt();
         } catch (java.util.InputMismatchException e) {
@@ -567,7 +569,9 @@ public class Main {
         }
     }
     //System authentication
-    private static User login(Scanner scanner) {
+    private static User login() {
+        Scanner scanner = new Scanner(System.in);
+
         System.out.print("Enter your username: ");
         String username = scanner.next();
         System.out.print("Enter your password: ");
@@ -593,17 +597,19 @@ public class Main {
         }
 
         System.out.print("Enter the number of the container to load: ");
-        int selection = getUserChoice(scanner);
+        int selection = getUserChoice();
 
         if (selection >= 1 && selection <= containersList.size()) {
             return containersList.get(selection - 1); // Return the selected container
         } else {
             System.out.println("Invalid selection. Please try again.");
-            return selectContainerToLoad(scanner); // Recursively call the method for a valid selection
+            return selectContainerToLoad(); // Recursively call the method for a valid selection
         }
     }
 
-    private static Containers selectContainerToUnload(Scanner scanner, List<Containers> loadedContainers) {
+    private static Containers selectContainerToUnload(List<Containers> loadedContainers) {
+        Scanner scanner = new Scanner(System.in);
+
         if (loadedContainers.isEmpty()) {
             System.out.println("No containers loaded in the vehicle.");
             return null;
@@ -615,13 +621,13 @@ public class Main {
         }
 
         System.out.print("Enter the number of the container to unload: ");
-        int selection = getUserChoice(scanner);
+        int selection = getUserChoice();
 
         if (selection >= 1 && selection <= loadedContainers.size()) {
             return loadedContainers.get(selection - 1); // Return the selected container
         } else {
             System.out.println("Invalid selection. Please try again.");
-            return selectContainerToUnload(scanner, loadedContainers); // Recursively call the method for a valid selection
+            return selectContainerToUnload(loadedContainers); // Recursively call the method for a valid selection
         }
     }
 

@@ -1,19 +1,7 @@
 package main.entities;
-// import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-// import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-// import java.text.ParseException;
-// import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-// import java.util.Locale;
 
-// import main.entities.Vehicles;
+import java.io.*;
+import java.util.*;
 
 public class Trip {
     private static TripStatus status;
@@ -24,6 +12,7 @@ public class Trip {
     private Port departurePort;
     private Port arrivalPort;
 
+    //constructor
     public Trip(String tripId, Vehicles vehicle, Date departureDate, Date arrivalDate, Port departurePort, Port arrivalPort, TripStatus status) {
         this.tripId = tripId;
         this.vehicle = vehicle;
