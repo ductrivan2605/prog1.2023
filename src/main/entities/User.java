@@ -13,6 +13,7 @@ enum Operation {
 }
 
 public abstract class User {
+    private static List<Trip> tripsUnderControl;
     private String username;
     private String password;
     private String userRole = null;
@@ -29,6 +30,10 @@ public abstract class User {
         this.shipsUnderControl = new ArrayList<>();
         this.trips = new ArrayList<>();
         this.tripsUnderControl = new ArrayList<>();
+    }
+
+    public static List<Trip> getTripsUnderControl() {
+        return tripsUnderControl;
     }
 
     //getters

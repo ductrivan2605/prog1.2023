@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Vehicles {
-
+    private static int totalContainers;
+    private static List<Containers> loadedContainers;
     private String vehicleId;
     private String name;
     private double currentFuel;

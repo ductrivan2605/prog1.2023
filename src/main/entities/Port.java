@@ -69,7 +69,7 @@ public class Port {
         return ports;
     }
 
-    // Save ports to a CSV file
+    // Save ports to a Data file
     public static void savePorts(List<Port> ports, String filePath) {
         try (PrintWriter writer = new PrintWriter(new File(filePath))) {
             for (Port port : ports) {
@@ -145,6 +145,20 @@ public static void deletePort(List<Port> ports, String portId, String filePath) 
     }
 }
 
+    public static List<Port> getAllPorts(List<Port> ports) {
+        return ports;
+    }
+
+    // Get a port by its ID
+    public static Port getPortByID(List<Port> ports, String portId) {
+        for (Port port : ports) {
+            if (port.getId().equals(portId)) {
+                return port;
+            }
+        }
+        return null; // Port not found
+    }
+
     // Getters and setters for properties
     public String getId() {
         return this.id;
@@ -165,11 +179,11 @@ public static void deletePort(List<Port> ports, String portId, String filePath) 
     public double getLatitude() {
         return this.latitude;
     }
-
+    
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
-
+    
     public double getLongitude() {
         return this.longitude;
     }
@@ -185,14 +199,14 @@ public static void deletePort(List<Port> ports, String portId, String filePath) 
     public void setStoringCapacity(double storingCapacity) {
         this.storingCapacity = storingCapacity;
     }
-    
+
     public boolean isLandingAbility() {
         return this.landingAbility;
     }
-    
+
     public void setLandingAbility(boolean landingAbility) {
         this.landingAbility = landingAbility;
-    }    
+    }
 
     public int getContainerCount() {
         return this.containerCount;

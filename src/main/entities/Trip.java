@@ -16,13 +16,13 @@ import java.util.List;
 // import main.entities.Vehicles;
 
 public class Trip {
+    private static TripStatus status;
     private String tripId;
     private Vehicles vehicle;
     private Date departureDate;
     private Date arrivalDate;
     private Port departurePort;
     private Port arrivalPort;
-    private static TripStatus status;
 
     public Trip(String tripId, Vehicles vehicle, Date departureDate, Date arrivalDate, Port departurePort, Port arrivalPort, TripStatus status) {
         this.tripId = tripId;
@@ -34,6 +34,67 @@ public class Trip {
         Trip.status = status;
     }
 
+    //methods
+    // Load Trips from trips.data
+    public static List<Trip> loadTripsFromFile(String filename) {
+        List<Trip> trips = new ArrayList<>();
+
+        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
+            trips = (List<Trip>) objectInputStream.readObject();
+            System.out.println("Trips loaded from " + filename);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return trips;
+    }
+
+     // Save a list of Trip objects to a file
+     public static void saveTripsToFile(List<Trip> trips, String filename) {
+         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(filename))) {
+             objectOutputStream.writeObject(trips);
+             System.out.println("Trips saved to " + filename);
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+     }
+
+    // Update a trip in a list by its tripId
+    public static boolean updateTripToFile(String filePath, String tripId, Trip updatedTrip) {
+        List<Trip> trips = loadTripsFromFile(filePath);
+
+        for (int i = 0; i < trips.size(); i++) {
+            if (trips.get(i).getTripId().equals(tripId)) {
+                trips.set(i, updatedTrip);
+                saveTripsToFile(trips, "trip.dat"); // Save the updated list of trips to the file
+                return true; // Trip updated successfully
+            }
+        }
+        return false; // Trip not found
+    }
+
+    // Delete a trip from a list by its tripId
+    public static boolean deleteTripFromFile(String filePath, String tripId) {
+        List<Trip> trips = loadTripsFromFile(filePath);
+
+        Trip tripToDelete = null;
+        for (Trip trip : trips) {
+            if (trip.getTripId().equals(tripId)) {
+                tripToDelete = trip;
+                break;
+            }
+        }
+
+        if (tripToDelete != null) {
+            trips.remove(tripToDelete);
+            saveTripsToFile(trips, "trip.dat"); // Save the updated list of trips to the file
+            return true; // Trip deleted successfully
+        }
+        return false; // Trip not found
+    }
+
+
+    //getters and setters
     public String getTripId() {
         return tripId;
     }
@@ -65,12 +126,8 @@ public class Trip {
     public void setStatus(TripStatus status) {
         Trip.status = status;
     }
-    enum TripStatus {
-        PLANNED,
-        IN_PROGRESS,
-        COMPLETED,
-        CANCELED
-    }
+
+    //toString
     @Override
     public String toString() {
         return "Trip{" +
@@ -82,50 +139,11 @@ public class Trip {
                 ", status=" + status +
                 '}';
     }
-//     // Load Trips from trips.dat
-    public static List<Trip> loadTripsFromFile(String filename) {
-        List<Trip> trips = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            trips = (List<Trip>) ois.readObject();
-            System.out.println("Trips loaded from " + filename);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return trips;
-    }
-     // Save a list of Trip objects to a file
-    public static void saveTripsToFile(List<Trip> trips, String filename) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(trips);
-            System.out.println("Trips saved to " + filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    // Update a trip in a list by its tripId
-    public static boolean updateTrip(List<Trip> trips, String tripId, Trip updatedTrip) {
-        for (int i = 0; i < trips.size(); i++) {
-            if (trips.get(i).getTripId().equals(tripId)) {
-                trips.set(i, updatedTrip);
-                return true; // Trip updated successfully
-            }
-        }
-        return false; // Trip not found
-    }
-    // Delete a trip from a list by its tripId
-    public static boolean deleteTrip(List<Trip> trips, String tripId) {
-        Trip tripToDelete = null;
-        for (Trip trip : trips) {
-            if (trip.getTripId().equals(tripId)) {
-                tripToDelete = trip;
-                break;
-            }
-        }
-        if (tripToDelete != null) {
-            trips.remove(tripToDelete);
-            return true; // Trip deleted successfully
-        }
-        return false; // Trip not found
+    enum TripStatus {
+        PLANNED,
+        IN_PROGRESS,
+        COMPLETED,
+        CANCELED
     }
 // This is AI generated solution for loading trips but it looks too messy and my teammate cant follow up
 //     public static List<Trip> loadTrips(String filePath, List<Port> ports, List<Vehicles> vehicles) {
