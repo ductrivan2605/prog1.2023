@@ -19,40 +19,6 @@ public class Containers {
         this.type = type;
     }
 
-    // Getters and setters for properties
-    public String getContainerId() {
-        return containerId;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public ContainerType getType() {
-        return type;
-    }
-    // Setter for weight
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
-
-    // Setter for type
-    public void setType(ContainerType type) {
-        this.type = type;
-    }
-    @Override
-    public String toString() {
-        return "Container ID: " + containerId +
-                "\nWeight: " + weight +
-                "\nType: " + type;
-    }
-    public enum ContainerType {
-        DRY_STORAGE,
-        OPEN_TOP,
-        OPEN_SIDE,
-        REFRIGERATED,
-        LIQUID
-    }
     // Load data from a file and return a list of Containers objects
     public static List<Containers> loadDataFromFile(String filePath) {
         List<Containers> containersList = new ArrayList<>();
@@ -89,11 +55,13 @@ public class Containers {
             e.printStackTrace();
         }
     }
-    //Delete a container from data fikle
+
+    //Delete a container from data file
     public static void deleteContainer(List<Containers> containersList, String containerIdToDelete) {
         containersList.removeIf(container -> container.getContainerId().equals(containerIdToDelete));
     }
-    //Update a container in the data file  
+
+    //Update a container in the data file
     public static void updateContainer(List<Containers> containersList, String containerIdToUpdate, double newWeight, ContainerType newType) {
         for (Containers container : containersList) {
             if (container.getContainerId().equals(containerIdToUpdate)) {
@@ -102,6 +70,47 @@ public class Containers {
                 break; // Exit the loop after updating the container
             }
         }
+    }
+
+    public static void addContainer(String containerId, double weight, ContainerType selectedType) {
+    }
+
+
+    // Getters and setters for properties
+    public String getContainerId() {
+        return containerId;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    // Setter for weight
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public ContainerType getType() {
+        return type;
+    }
+
+    // Setter for type
+    public void setType(ContainerType type) {
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Container ID: " + containerId +
+                "\nWeight: " + weight +
+                "\nType: " + type;
+    }
+    public enum ContainerType {
+        DRY_STORAGE,
+        OPEN_TOP,
+        OPEN_SIDE,
+        REFRIGERATED,
+        LIQUID
     }
     
     // Load data from a file

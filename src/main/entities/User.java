@@ -6,6 +6,13 @@ import java.time.LocalDate;
 
 import main.entities.Containers.ContainerType;
 
+enum Operation {
+    MANAGE_VEHICLES,
+    MANAGE_CONTAINERS,
+    MANAGE_PORTS,
+    VIEW_HISTORY
+}
+
 public abstract class User {
     private String username;
     private String password;
@@ -132,11 +139,44 @@ public abstract class User {
 
         return totalWeightByContainerType;
     }
-}
 
-enum Operation {
-    MANAGE_VEHICLES,
-    MANAGE_CONTAINERS,
-    MANAGE_PORTS,
-    VIEW_HISTORY
+    private boolean isSameDay(Date date1, LocalDate inputDate) {
+        // Convert the Date to LocalDate
+        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Check if the LocalDate and the Date objects represent the same day
+        return localDate1.isEqual(inputDate);
+    }
+
+    public List<Trip> listTripsInDay(Date date) {
+        List<Trip> tripsInDay = new ArrayList<>();
+
+        // Create a Scanner to input the desired departure date from the user
+        Scanner scanner = new Scanner(System.in);
+
+        try (scanner) {
+            System.out.print("Enter the departure date (yyyy-MM-dd): ");
+            String inputDateStr = scanner.nextLine();
+            LocalDate inputDate = LocalDate.parse(inputDateStr);
+
+            for (Trip trip : this.getTrips()) {
+                if (isSameDay(trip.getDepartureDate(), inputDate) || isSameDay(trip.getArrivalDate(), inputDate)) {
+                    tripsInDay.add(trip);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd format.");
+        }
+        // Close the scanner when done
+        return tripsInDay;
+    }
+
+    // Method to calculate daily's fuel consumption
+    public double calculateDailyFuelConsumption() {
+        double totalFuelConsumption = 0.0;
+        for (Vehicles vehicles : this.getVehiclesUnderControl()) {
+            totalFuelConsumption += vehicles.calculateDailyFuelConsumption();
+        }
+        return totalFuelConsumption;
+    }
 }

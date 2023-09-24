@@ -49,7 +49,7 @@ public class Main {
                 switch (choice) {
                     case 1:
                         // Manage Vehicles
-                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                        if ("PortManager".equals(loggedInUser.getRole())) {
                             // Implement Port Manager's Manage Vehicles functionality here
                             System.out.println("Accessing Port Manager's Manage Vehicles...");
                         } else if ("Admin".equals(loggedInUser.getRole())) {
@@ -59,27 +59,27 @@ public class Main {
                         break;
                     case 2:
                         // Manage Containers
-                        if ("Port Manager".equals(loggedInUser.getRole())) {
-                            // Implement Port Manager's Manage Containers functionality here
+                        if ("PortManager".equals(loggedInUser.getRole())) {
+                            manageContainers(); // Implementation of Container Management Menu
                             System.out.println("Accessing Port Manager's Manage Containers...");
                         } else if ("Admin".equals(loggedInUser.getRole())) {
-                            // Implement Admin's Manage Containers functionality here
+                            manageContainers(); // Implementation of Container Management Menu
                             System.out.println("Accessing Admin's Manage Containers...");
                         }
                         break;
                     case 3:
                         // Manage Ports
-                        if ("Port Manager".equals(loggedInUser.getRole())) {
-                            // Implement Port Manager's Manage Ports functionality here
+                        if ("PortManager".equals(loggedInUser.getRole())) {
                             System.out.println("Accessing Port Manager's Manage Ports...");
+                            managePorts(); // Implementation of Port Management Menu
                         } else if ("Admin".equals(loggedInUser.getRole())) {
-                            // Implement Admin's Manage Ports functionality here
                             System.out.println("Accessing Admin's Manage Ports...");
+                            managePorts(); // Implementation of Port Management Menu
                         }
                         break;
                     case 4:
                         // View History
-                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                        if ("PortManager".equals(loggedInUser.getRole())) {
                             // Implement Port Manager's View History functionality here
                             System.out.println("Accessing Port Manager's View History...");
                         } else if ("Admin".equals(loggedInUser.getRole())) {
@@ -89,7 +89,7 @@ public class Main {
                         break;
                     case 5:
                         // Statistics Operations
-                        if ("Port Manager".equals(loggedInUser.getRole())) {
+                        if ("PortManager".equals(loggedInUser.getRole())) {
                             // Implement Port Manager's Statistics Operations functionality here
                             System.out.println("Accessing Port Manager's Statistics Operations...");
                         } else if ("Admin".equals(loggedInUser.getRole())) {
@@ -111,7 +111,7 @@ public class Main {
     private static void displayMainMenu() {
         System.out.println("Container Port Management System - Main Menu");
 
-        if ("Port Manager".equals(loggedInUser.getRole())) {
+        if ("PortManager".equals(loggedInUser.getRole())) {
             System.out.println("1. Manage Vehicles");
             System.out.println("2. Manage Containers");
             System.out.println("3. Manage Ports");
@@ -153,5 +153,14 @@ public class Main {
 
         System.out.println("Login failed. Please check your username and password.");
         return null; // Return null to indicate login failure
+    }
+    private static void managePorts() {
+        PortMenu portMenu = new PortMenu();
+        Port port1 = new Port();
+        portMenu.displayPortMenu();
+    }
+    private static void manageContainers() {
+        ContainerMenu containerMenu = new ContainerMenu();
+        containerMenu.displayContainerMenu();
     }
 }

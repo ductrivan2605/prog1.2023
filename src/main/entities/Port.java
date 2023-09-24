@@ -12,6 +12,7 @@ import java.util.Set;
 import main.entities.Vehicles.VehicleType;
 
 public class Port {
+    private static final double EARTH_RADIUS_KM = 6371.0;
     private String id; // Unique ID (formatted as p-number)
     private String name;
     private double latitude;
@@ -23,7 +24,6 @@ public class Port {
     private List<Trip> pastTrips;
     private List<Trip> currentTrips;
     private Set<VehicleType> allowedVehicleTypes = new HashSet<>();
-    private static final double EARTH_RADIUS_KM = 6371.0;
     private PortManager portManager;
 
     public Port(String id, String name, double latitude, double longitude, double storingCapacity, boolean landingAbility) {
@@ -40,170 +40,10 @@ public class Port {
         this.portManager = null;
     }
 
-    // Getters and setters for properties
-    public String getId() {
-        return id;
-    }
+    public Port() {}
 
-    public String getName() {
-        return name;
-    }
+    //static methods
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public double getStoringCapacity() {
-        return storingCapacity;
-    }
-
-    public boolean isLandingAbility() {
-        return landingAbility;
-    }
-
-    public int getContainerCount() {
-        return containerCount;
-    }
-
-    public int getVehicleCount() {
-        return vehicleCount;
-    }
-    // Get the list of past trips
-    public List<Trip> getPastTrips() {
-        return pastTrips;
-    }
-
-    // Get the list of current trips
-    public List<Trip> getCurrentTrips() {
-        return currentTrips;
-    }
-    public PortManager getPortManager() {
-        return portManager;
-    }
-    //Setters 
-    public void setId(String id) {
-        this.id = id;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-    
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-    
-    public void setStoringCapacity(double storingCapacity) {
-        this.storingCapacity = storingCapacity;
-    }
-    
-    public void setLandingAbility(boolean landingAbility) {
-        this.landingAbility = landingAbility;
-    }    
-    public void setAllowedVehicleTypes(Set<VehicleType> allowedVehicleTypes) {
-        this.allowedVehicleTypes = allowedVehicleTypes;
-    }
-    // Add a trip to the list of past trips
-    public void addPastTrip(Trip trip) {
-        pastTrips.add(trip);
-    }
-
-    // Add a trip to the list of current trips
-    public void addCurrentTrip(Trip trip) {
-        currentTrips.add(trip);
-    }
-    // Add a container to the port
-    public void addContainer() {
-        containerCount++;
-    }
-
-    // Remove a container from the port
-    public void removeContainer() {
-        if (containerCount > 0) {
-            containerCount--;
-        }
-    }
-
-    // Add a vehicle to the port
-    public void addVehicle() {
-        vehicleCount++;
-    }
-
-    // Remove a vehicle from the port
-    public void removeVehicle() {
-        if (vehicleCount > 0) {
-            vehicleCount--;
-        }
-    }
-    // Set the container count
-    public void setContainerCount(int containerCount) {
-        this.containerCount = containerCount;
-    }
-
-    // Set the vehicle count
-    public void setVehicleCount(int vehicleCount) {
-        this.vehicleCount = vehicleCount;
-    }
-
-    // Set the port manager
-    public void setPortManager(PortManager portManager) {
-        this.portManager = portManager;
-    }
-    public Set<VehicleType> getAllowedVehicleTypes() {
-        return allowedVehicleTypes;
-    }
-
-    public void addAllowedVehicleType(VehicleType vehicleType) {
-        allowedVehicleTypes.add(vehicleType);
-    }
-
-    public void removeAllowedVehicleType(VehicleType vehicleType) {
-        allowedVehicleTypes.remove(vehicleType);
-    }
-    // Method to check if the port has landing ability for a specific vehicle type
-    public boolean hasLandingAbilityFor(VehicleType vehicleType) {
-        return allowedVehicleTypes.contains(vehicleType) && landingAbility;
-    }
-    // Calculate the distance between this port and another port using Haversine formula
-    public double calculateDistanceTo(Port otherPort) {
-        double lat1 = Math.toRadians(this.latitude);
-        double lon1 = Math.toRadians(this.longitude);
-        double lat2 = Math.toRadians(otherPort.latitude);
-        double lon2 = Math.toRadians(otherPort.longitude);
-
-        // Haversine formula
-        double dlon = lon2 - lon1;
-        double dlat = lat2 - lat1;
-        double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return EARTH_RADIUS_KM * c;
-    }
-    // Assign a PortManager to control this port
-    public void assignPortManager(PortManager portManager) {
-        if (this.portManager == null) {
-            this.portManager = portManager;
-        } else {
-            System.out.println("This port is already managed by a Port Manager.");
-        }
-    }
-    // Remove the PortManager from controlling this port
-    public void removePortManager() {
-        this.portManager = null;
-    }
-
-    // Check if this port is controlled by a Port Manager
-    public boolean isManagedByPortManager() {
-        return portManager != null;
-    }
     public static List<Port> loadPorts(String filePath, List<PortManager> portManagers) {
         List<Port> ports = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(filePath))) {
@@ -248,6 +88,7 @@ public class Port {
             e.printStackTrace();
         }
     }
+
     // Find a PortManager by username
 public static PortManager findPortManagerByUsername(String username, List<PortManager> portManagers) {
     for (PortManager portManager : portManagers) {
@@ -258,6 +99,7 @@ public static PortManager findPortManagerByUsername(String username, List<PortMa
     // Return null if the PortManager is not found
     return null;
     }
+
 public static void deletePort(List<Port> ports, String portId, String filePath) {
     // Find the port with the given ID
     Port portToDelete = null;
@@ -280,6 +122,7 @@ public static void deletePort(List<Port> ports, String portId, String filePath) 
         System.out.println("Port with ID " + portId + " not found.");
     }
     }
+
     public static void updatePort(List<Port> ports, String portId, String newName, double newLatitude,
                               double newLongitude, double newStoringCapacity, boolean newLandingAbility, String managerUsername,
                               String filePath) {
@@ -307,4 +150,181 @@ public static void deletePort(List<Port> ports, String portId, String filePath) 
         System.out.println("Port with ID " + portId + " not found.");
     }
 }
+
+    // Getters and setters for properties
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getLatitude() {
+        return this.latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return this.longitude;
+    }
+    
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+    
+    public double getStoringCapacity() {
+        return this.storingCapacity;
+    }
+    
+    public void setStoringCapacity(double storingCapacity) {
+        this.storingCapacity = storingCapacity;
+    }
+    
+    public boolean isLandingAbility() {
+        return this.landingAbility;
+    }
+    
+    public void setLandingAbility(boolean landingAbility) {
+        this.landingAbility = landingAbility;
+    }    
+
+    public int getContainerCount() {
+        return this.containerCount;
+    }
+
+    // Set the container count
+    public void setContainerCount(int containerCount) {
+        this.containerCount = containerCount;
+    }
+
+    public int getVehicleCount() {
+        return this.vehicleCount;
+    }
+
+    // Set the vehicle count
+    public void setVehicleCount(int vehicleCount) {
+        this.vehicleCount = vehicleCount;
+    }
+
+    // Get the list of past trips
+    public List<Trip> getPastTrips() {
+        return pastTrips;
+    }
+
+    // Get the list of current trips
+    public List<Trip> getCurrentTrips() {
+        return currentTrips;
+    }
+
+    public PortManager getPortManager() {
+        return portManager;
+    }
+
+    // Set the port manager
+    public void setPortManager(PortManager portManager) {
+        this.portManager = portManager;
+    }
+
+    public Set<VehicleType> getAllowedVehicleTypes() {
+        return allowedVehicleTypes;
+    }
+
+    public void setAllowedVehicleTypes(Set<VehicleType> allowedVehicleTypes) {
+        this.allowedVehicleTypes = allowedVehicleTypes;
+    }
+
+    //methods
+    // Add a trip to the list of past trips
+    public void addPastTrip(Trip trip) {
+        pastTrips.add(trip);
+    }
+
+    // Add a trip to the list of current trips
+    public void addCurrentTrip(Trip trip) {
+        currentTrips.add(trip);
+    }
+
+    // Add a container to the port
+    public void addContainer() {
+        containerCount++;
+    }
+
+    // Remove a container from the port
+    public void removeContainer() {
+        if (containerCount > 0) {
+            containerCount--;
+        }
+    }
+
+    // Add a vehicle to the port
+    public void addVehicle() {
+        vehicleCount++;
+    }
+
+    // Remove a vehicle from the port
+    public void removeVehicle() {
+        if (vehicleCount > 0) {
+            vehicleCount--;
+        }
+    }
+
+    public void addAllowedVehicleType(VehicleType vehicleType) {
+        allowedVehicleTypes.add(vehicleType);
+    }
+
+    public void removeAllowedVehicleType(VehicleType vehicleType) {
+        allowedVehicleTypes.remove(vehicleType);
+    }
+
+    // Method to check if the port has landing ability for a specific vehicle type
+    public boolean hasLandingAbilityFor(VehicleType vehicleType) {
+        return allowedVehicleTypes.contains(vehicleType) && landingAbility;
+    }
+
+    // Calculate the distance between this port and another port using Haversine formula
+    public double calculateDistanceTo(Port otherPort) {
+        double lat1 = Math.toRadians(this.latitude);
+        double lon1 = Math.toRadians(this.longitude);
+        double lat2 = Math.toRadians(otherPort.latitude);
+        double lon2 = Math.toRadians(otherPort.longitude);
+
+        // Haversine formula
+        double dlon = lon2 - lon1;
+        double dlat = lat2 - lat1;
+        double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS_KM * c;
+    }
+
+    // Assign a PortManager to control this port
+    public void assignPortManager(PortManager portManager) {
+        if (this.portManager == null) {
+            this.portManager = portManager;
+        } else {
+            System.out.println("This port is already managed by a Port Manager.");
+        }
+    }
+
+    // Remove the PortManager from controlling this port
+    public void removePortManager() {
+        this.portManager = null;
+    }
+
+    // Check if this port is controlled by a Port Manager
+    public boolean isManagedByPortManager() {
+        return portManager != null;
+    }
 }

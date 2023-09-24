@@ -27,22 +27,27 @@ public interface Vehicles {
 
     void setCurrentPort(Port currentPort);
 
-    int getTotalContainers();
+    public int getTotalContainers() {
+        return totalContainers;
+    }
+
+    public void setTotalContainers(int totalContainers) {
+        this.totalContainers = totalContainers;
+    }
 
     void setTotalContainers(int totalContainers);
 
-    VehicleType getVehicleType();
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
 
-    void setVehicleType(VehicleType vehicleType);
+    public List<Containers> getLoadedContainers() {
+        return loadedContainers;
+    }
 
     void moveToPort(Port targetPort);
 
     void refuel(double amount);
-    // Enum to represent vehicle types
-    enum VehicleType {
-        SHIP,
-        BASIC_TRUCK, REEFER_TRUCK, TANKER_TRUCK, TRUCK
-    }
 
     // Method to calculate required fuel for a trip
     double calculateRequiredFuel(double distance);
@@ -56,6 +61,12 @@ public interface Vehicles {
     double calculateDailyFuelConsumption();
 
     List<Containers> getLoadedContainers();
+
+    // Enum to represent vehicle types
+    enum VehicleType {
+        SHIP,
+        BASIC_TRUCK, REEFER_TRUCK, TANKER_TRUCK, TRUCK
+    }
 
     
 }

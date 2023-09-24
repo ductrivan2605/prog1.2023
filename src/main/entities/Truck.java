@@ -32,6 +32,78 @@ public class Truck implements Vehicles, Serializable {
     }
     //Getters and setters
 
+    public static void deleteTruck(List<Truck> trucks, String vehicleId, String fileName) {
+        // Find the truck to delete by vehicleId
+        Truck truckToDelete = null;
+        for (Truck truck : trucks) {
+            if (truck.getVehicleId().equals(vehicleId)) {
+                truckToDelete = truck;
+                break;
+            }
+        }
+
+        if (truckToDelete != null) {
+            // Remove the truck from the list
+            trucks.remove(truckToDelete);
+            // Save the updated list of trucks
+            saveTrucks(trucks, fileName);
+            System.out.println("Truck with vehicleId " + vehicleId + " deleted successfully.");
+        } else {
+            System.out.println("Truck with vehicleId " + vehicleId + " not found.");
+        }
+    }
+
+    public static void updateTruck(List<Truck> trucks, String vehicleId, Truck updatedTruck, String fileName) {
+        // Find the truck to update by vehicleId
+        Truck truckToUpdate = null;
+        for (Truck truck : trucks) {
+            if (truck.getVehicleId().equals(vehicleId)) {
+                truckToUpdate = truck;
+                break;
+            }
+        }
+
+        if (truckToUpdate != null) {
+            // Update the truck with new data
+            truckToUpdate.setName(updatedTruck.getName());
+            truckToUpdate.setCurrentFuel(updatedTruck.getCurrentFuel());
+            truckToUpdate.setCarryingCapacity(updatedTruck.getCarryingCapacity());
+            truckToUpdate.setFuelCapacity(updatedTruck.getFuelCapacity());
+            truckToUpdate.setCurrentPort(updatedTruck.getCurrentPort());
+            truckToUpdate.setTotalContainers(updatedTruck.getTotalContainers());
+            truckToUpdate.setVehicleType(updatedTruck.getVehicleType());
+            truckToUpdate.setLoadedContainers(updatedTruck.getLoadedContainers());
+
+            // Save the updated list of trucks
+            saveTrucks(trucks, fileName);
+            System.out.println("Truck with vehicleId " + vehicleId + " updated successfully.");
+        } else {
+            System.out.println("Truck with vehicleId " + vehicleId + " not found.");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Truck> loadTrucks(String fileName) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName))) {
+            List<Truck> trucks = (List<Truck>) inputStream.readObject();
+            System.out.println("Trucks loaded successfully from " + fileName);
+            return trucks;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+//    Save the list of all Trucks to a file
+    public static void saveTrucks(List<Truck> trucks, String fileName) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName))) {
+            outputStream.writeObject(trucks);
+            System.out.println("Trucks saved successfully to " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getVehicleId() {
         return vehicleId;
     }
@@ -99,16 +171,19 @@ public class Truck implements Vehicles, Serializable {
     public List<Containers> getLoadedContainers() {
         return loadedContainers;
     }
+
+    public void setLoadedContainers(List<Containers> loadedContainers) {
+        this.loadedContainers = loadedContainers;
+    }
+
     public List<Containers.ContainerType> getLoadedContainerTypes() {
         List<Containers.ContainerType> containerTypes = new ArrayList<>();
-        for (Containers container : loadedContainers) { 
+        for (Containers container : loadedContainers) {
             containerTypes.add(container.getType());
         }
         return containerTypes;
     }
-    public void setLoadedContainers(List<Containers> loadedContainers) {
-        this.loadedContainers = loadedContainers;
-    }
+
     //Fuel calculation for each type of truck
     @Override
     public double calculateRequiredFuel(double distance) {
@@ -130,6 +205,7 @@ public class Truck implements Vehicles, Serializable {
 
         return fuelConsumptionRate * distance;
     }
+
     //Fuel consumption of each type of truck based on Container Type
     private double calculateFuelConsumptionForBasicTruck(List<Containers.ContainerType> containerTypes) {
         double fuelConsumptionRate = 0.0;
@@ -183,6 +259,7 @@ public class Truck implements Vehicles, Serializable {
 
         return fuelConsumptionRate;
     }
+
     //Algorithms for load and unload containers
     @Override
     public void loadContainer(Containers container) {
@@ -199,6 +276,7 @@ public class Truck implements Vehicles, Serializable {
             totalContainers--;
     }
     }
+
     //Checking if a truck can move to a port based on its condition
     public boolean canMoveToPort(Port port) {
         // Check if the truck can move to the specified port based on its current load and the port's landing ability
@@ -217,6 +295,7 @@ public class Truck implements Vehicles, Serializable {
         }
         return totalWeight;
     }
+
     @Override
     public void moveToPort(Port targetPort) {
         if (getCurrentPort() == null) {
@@ -238,6 +317,7 @@ public class Truck implements Vehicles, Serializable {
             System.out.println("Truck " + getVehicleId() + " cannot move to " + targetPort.getName() + " due to load capacity.");
         }
     }
+
     //Refuelling Trucks
     @Override
     public void refuel(double amount) {
@@ -253,6 +333,7 @@ public class Truck implements Vehicles, Serializable {
             System.out.println("Invalid refueling amount.");
         }
     }
+
     public double calculateDailyFuelConsumption() {
         double dailyFuelConsumption = 0.0;
 
@@ -275,89 +356,21 @@ public class Truck implements Vehicles, Serializable {
 
         return dailyFuelConsumption;
     }
+
     //Illusion daily fuel consumption number for each trucks
     private double calculateDailyFuelConsumptionForBasicTruck() {
         // Calculate daily fuel consumption for basic trucks
         return 50.0;
     }
-
+    
     private double calculateDailyFuelConsumptionForReeferTruck() {
         // Calculate daily fuel consumption for reefer trucks
-        return 60.0; 
+        return 60.0;
     }
 
     private double calculateDailyFuelConsumptionForTankerTruck() {
         // Calculate daily fuel consumption for tanker trucks
         return 70.0;
-    }
-    public static void deleteTruck(List<Truck> trucks, String vehicleId, String fileName) {
-        // Find the truck to delete by vehicleId
-        Truck truckToDelete = null;
-        for (Truck truck : trucks) {
-            if (truck.getVehicleId().equals(vehicleId)) {
-                truckToDelete = truck;
-                break;
-            }
-        }
-    
-        if (truckToDelete != null) {
-            // Remove the truck from the list
-            trucks.remove(truckToDelete);
-            // Save the updated list of trucks
-            saveTrucks(trucks, fileName);
-            System.out.println("Truck with vehicleId " + vehicleId + " deleted successfully.");
-        } else {
-            System.out.println("Truck with vehicleId " + vehicleId + " not found.");
-        }
-    }
-    public static void updateTruck(List<Truck> trucks, String vehicleId, Truck updatedTruck, String fileName) {
-        // Find the truck to update by vehicleId
-        Truck truckToUpdate = null;
-        for (Truck truck : trucks) {
-            if (truck.getVehicleId().equals(vehicleId)) {
-                truckToUpdate = truck;
-                break;
-            }
-        }
-    
-        if (truckToUpdate != null) {
-            // Update the truck with new data
-            truckToUpdate.setName(updatedTruck.getName());
-            truckToUpdate.setCurrentFuel(updatedTruck.getCurrentFuel());
-            truckToUpdate.setCarryingCapacity(updatedTruck.getCarryingCapacity());
-            truckToUpdate.setFuelCapacity(updatedTruck.getFuelCapacity());
-            truckToUpdate.setCurrentPort(updatedTruck.getCurrentPort());
-            truckToUpdate.setTotalContainers(updatedTruck.getTotalContainers());
-            truckToUpdate.setVehicleType(updatedTruck.getVehicleType());
-            truckToUpdate.setLoadedContainers(updatedTruck.getLoadedContainers());
-    
-            // Save the updated list of trucks
-            saveTrucks(trucks, fileName);
-            System.out.println("Truck with vehicleId " + vehicleId + " updated successfully.");
-        } else {
-            System.out.println("Truck with vehicleId " + vehicleId + " not found.");
-        }
-    }
-    
-    @SuppressWarnings("unchecked")
-    public static List<Truck> loadTrucks(String fileName) {
-        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName))) {
-            List<Truck> trucks = (List<Truck>) inputStream.readObject();
-            System.out.println("Trucks loaded successfully from " + fileName);
-            return trucks;
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-//    Save the list of all Trucks to a file
-    public static void saveTrucks(List<Truck> trucks, String fileName) {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            outputStream.writeObject(trucks);
-            System.out.println("Trucks saved successfully to " + fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     //  // Save the Truck object to a file
     //  saveTruckToFile(truck, "truck.ser");
