@@ -17,9 +17,9 @@ public class Ship implements Vehicles, Serializable {
     private double carryingCapacity;
     private double fuelCapacity;
     private Port currentPort;
-    private int totalContainers;
+    private static int totalContainers;
     private VehicleType vehicleType;
-    private List<Containers> loadedContainers;
+    private static List<Containers> loadedContainers;
 
     public Ship(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort) {
         this.vehicleId = vehicleId;
@@ -116,7 +116,6 @@ public class Ship implements Vehicles, Serializable {
         // Update the total container count
         totalContainers++;
     }
-
     @Override
     public void unloadContainer(Containers container) {
         // Remove the container from the list of loaded containers
@@ -187,7 +186,7 @@ public class Ship implements Vehicles, Serializable {
         return dailyFuelConsumption;
     }
 
-    private double calculateDailyFuelConsumptionForShip() {
+    public double calculateDailyFuelConsumptionForShip() {
         // Calculate daily fuel consumption for ships
         return 100.0;
     } 
@@ -266,10 +265,10 @@ public static void saveAllShips(List<Ship> ships, String filename) {
 }
 // Saving a Ship object
 // Ship myShip = new Ship("SHIP001", "My Ship", 1000.0, 2000.0, 5000.0, myPort);
-// saveShipToFile(myShip, "myship.dat");
+// saveShipToFile(myShip, "ship.csv");
 
 // Loading a Ship object
-// Ship loadedShip = loadShipFromFile("myship.dat");
+// Ship loadedShip = loadShipFromFile("ship.csv");
 // if (loadedShip != null) {
 //     System.out.println("Loaded Ship ID: " + loadedShip.getVehicleId());
 //     System.out.println("Loaded Ship Name: " + loadedShip.getName());
@@ -277,10 +276,10 @@ public static void saveAllShips(List<Ship> ships, String filename) {
 // }
 // Delete a ship by vehicleId
 // String vehicleIdToDelete = "12345";
-// deleteShip("ships.dat", vehicleIdToDelete);
+// deleteShip("ship.csv", vehicleIdToDelete);
 
 // Update a ship record
 // Ship updatedShip = new Ship("12345", "Updated Ship Name", 200.0, 150.0, 300.0, new Port("New Port"));
-// updateShip("ships.dat", updatedShip);
+// updateShip("ship.csv", updatedShip);
 
 }

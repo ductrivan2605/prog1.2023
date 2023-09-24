@@ -8,27 +8,31 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
+import java.util.logging.Logger;
+
 public class Truck implements Vehicles, Serializable {
     private String vehicleId;
     private String name;
     private double currentFuel;
-    private double carryingCapacity;
+    private static double carryingCapacity;
     private double fuelCapacity;
     private Port currentPort;
-    private int totalContainers;
+    private static int totalContainers;
     private VehicleType vehicleType;
-    private List<Containers> loadedContainers;
+    private static List<Containers> loadedContainers;
+    private static final Logger logger = Logger.getLogger(Truck.class.getName());
+
     // Constructor
     public Truck(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort, VehicleType vehicleType) {
         this.vehicleId = vehicleId;
         this.name = name;
         this.currentFuel = currentFuel;
-        this.carryingCapacity = carryingCapacity;
+        Truck.carryingCapacity = carryingCapacity;
         this.fuelCapacity = fuelCapacity;
         this.currentPort = currentPort;
-        this.totalContainers = 0;
+        totalContainers = 0;
         this.vehicleType = vehicleType;
-        this.loadedContainers = new ArrayList<>();
+        loadedContainers = new ArrayList<>();
     }
     //Getters and setters
 
@@ -139,10 +143,7 @@ public class Truck implements Vehicles, Serializable {
                 case DRY_STORAGE:
                     fuelConsumptionRate += 4.6;
                     break;
-                case OPEN_TOP:
-                    fuelConsumptionRate += 3.2;
-                    break;
-                case OPEN_SIDE:
+                case OPEN_TOP, OPEN_SIDE:
                     fuelConsumptionRate += 3.2;
                     break;
                 default:
@@ -191,7 +192,6 @@ public class Truck implements Vehicles, Serializable {
         totalContainers++;
     }
 }
-
     @Override
     public void unloadContainer(Containers container) {
         if (loadedContainers.contains(container)) {
@@ -276,17 +276,17 @@ public class Truck implements Vehicles, Serializable {
         return dailyFuelConsumption;
     }
     //Illusion daily fuel consumption number for each trucks
-    private double calculateDailyFuelConsumptionForBasicTruck() {
+    public double calculateDailyFuelConsumptionForBasicTruck() {
         // Calculate daily fuel consumption for basic trucks
         return 50.0;
     }
 
-    private double calculateDailyFuelConsumptionForReeferTruck() {
+    public double calculateDailyFuelConsumptionForReeferTruck() {
         // Calculate daily fuel consumption for reefer trucks
         return 60.0; 
     }
 
-    private double calculateDailyFuelConsumptionForTankerTruck() {
+    public double calculateDailyFuelConsumptionForTankerTruck() {
         // Calculate daily fuel consumption for tanker trucks
         return 70.0;
     }
@@ -338,27 +338,29 @@ public class Truck implements Vehicles, Serializable {
             System.out.println("Truck with vehicleId " + vehicleId + " not found.");
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public static List<Truck> loadTrucks(String fileName) {
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName))) {
             List<Truck> trucks = (List<Truck>) inputStream.readObject();
-            System.out.println("Trucks loaded successfully from " + fileName);
+            logger.info("Trucks loaded successfully from " + fileName); // Log the success message
             return trucks;
         } catch (IOException | ClassNotFoundException e) {
+            logger.severe("Failed to load trucks from " + fileName); // Log the error message
             e.printStackTrace();
             return null;
         }
     }
 //    Save the list of all Trucks to a file
     public static void saveTrucks(List<Truck> trucks, String fileName) {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            outputStream.writeObject(trucks);
-            System.out.println("Trucks saved successfully to " + fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName))) {
+        outputStream.writeObject(trucks);
+        logger.info("Trucks saved successfully to " + fileName); // Log the success message
+    } catch (IOException e) {
+        logger.severe("Failed to save trucks to " + fileName); // Log the error message
+        e.printStackTrace();
     }
+}
     //  // Save the Truck object to a file
     //  saveTruckToFile(truck, "truck.ser");
 

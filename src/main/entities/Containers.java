@@ -13,10 +13,13 @@ public class Containers {
     private double weight;
     private ContainerType type;
 
+    private String loadedOnVehicleId;  // Add a property to track the vehicle ID where the container is loaded
+
     public Containers(String containerId, double weight, ContainerType type) {
         this.containerId = containerId;
         this.weight = weight;
         this.type = type;
+        this.loadedOnVehicleId = null; // Initially, the container is not loaded on any vehicle
     }
 
     // Getters and setters for properties
@@ -40,6 +43,12 @@ public class Containers {
     public void setType(ContainerType type) {
         this.type = type;
     }
+    public String getLoadedOnVehicleId() {
+        return loadedOnVehicleId;
+    }
+    public void setLoadedOnVehicleId(String loadedOnVehicleId) {
+        this.loadedOnVehicleId = loadedOnVehicleId;
+    }
     @Override
     public String toString() {
         return "Container ID: " + containerId +
@@ -53,8 +62,17 @@ public class Containers {
         REFRIGERATED,
         LIQUID
     }
+    public static double calculateTotalWeight(List<Containers> containersList) {
+        double totalWeight = 0.0;
+
+        for (Containers container : containersList) {
+            totalWeight += container.getWeight();
+        }
+
+        return totalWeight;
+    }
     // Load data from a file and return a list of Containers objects
-    public static List<Containers> loadDataFromFile(String filePath) {
+    public static List<Containers> loadContainerFromFile(String filePath) {
         List<Containers> containersList = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -78,7 +96,7 @@ public class Containers {
     }
 
     // Save a list of Containers objects to a file
-    public static void saveDataToFile(String filePath, List<Containers> containersList) {
+    public static void saveContainerToFile(String filePath, List<Containers> containersList) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Containers container : containersList) {
                 String line = container.getContainerId() + "," + container.getWeight() + "," + container.getType().toString();
@@ -103,6 +121,7 @@ public class Containers {
             }
         }
     }
+
     
     // Load data from a file
     // List<Containers> loadedContainers = loadDataFromFile("containers_data.txt");
@@ -110,5 +129,5 @@ public class Containers {
     //  Modify the loaded data or create new Containers objects as needed
 
     // Save the modified or new data back to a file
-    // saveDataToFile("containers_data.txt", loadedContainers);
+    // saveDataToFile("containers_data.csv", loadedContainers);
 }
