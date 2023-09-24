@@ -102,19 +102,29 @@ public abstract class Vehicles {
     double calculateRequiredFuel(double distance);
 
     // Method to load containers onto the vehicle
-    void loadContainer(Containers container);
+    public void loadContainer(Containers container) {
+        // Add the container to the list of loaded containers
+        loadedContainers.add(container);
+        // Update the total container count
+        totalContainers++;
+    }
 
     // Method to unload containers from the vehicle
-    void unloadContainer(Containers container);
+    public void unloadContainer(Containers container) {
+        // Remove the container from the list of loaded containers
+        loadedContainers.remove(container);
+        // Update the total container count
+        totalContainers--;
+    }
 
     double calculateDailyFuelConsumption();
 
     List<Containers> getLoadedContainers();
 
     // Enum to represent vehicle types
-    enum VehicleType {
+    public enum VehicleType {
         SHIP,
-        BASIC_TRUCK, REEFER_TRUCK, TANKER_TRUCK, TRUCK
+        BASIC_TRUCK, REEFER_TRUCK, TANKER_TRUCK
     }
 
     

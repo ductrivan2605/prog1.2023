@@ -14,16 +14,8 @@ public class Truck extends Vehicles {
     private static final Logger logger = Logger.getLogger(Truck.class.getName());
 
     // Constructor
-    public Truck(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort, VehicleType vehicleType) {
-        this.vehicleId = vehicleId;
-        this.name = name;
-        this.currentFuel = currentFuel;
-        Truck.carryingCapacity = carryingCapacity;
-        this.fuelCapacity = fuelCapacity;
-        this.currentPort = currentPort;
-        totalContainers = 0;
-        this.vehicleType = vehicleType;
-        loadedContainers = new ArrayList<>();
+    public Truck(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort) {
+        super(vehicleId, name, currentFuel, carryingCapacity, fuelCapacity, currentPort);
     }
     //Getters and setters
 

@@ -38,7 +38,6 @@ public class Port {
     public Port() {}
 
     //static methods
-
     public static List<Port> loadPorts(String filePath, List<PortManager> portManagers) {
         List<Port> ports = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(filePath))) {
@@ -325,7 +324,6 @@ public static void deletePort(List<Port> ports, String portId, String filePath) 
             System.out.println("This port is already managed by a Port Manager.");
         }
     }
-
     // Remove the PortManager from controlling this port
     public void removePortManager() {
         this.portManager = null;

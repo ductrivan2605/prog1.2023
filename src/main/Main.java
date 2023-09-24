@@ -1,15 +1,17 @@
 package main;
 
-import java.awt.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.List;
-
 import main.entities.*;
 
 public class Main {
 
     private static boolean isLoggedIn = false;
     private static List<User> users = new ArrayList<>();
+    private static List<PortManager> portManager = new ArrayList<>();
     private static User loggedInUser = null; // Store the logged-in user object
 
     public static void main(String[] args) {
@@ -112,7 +114,7 @@ public class Main {
                     case 2:
                         // Weight of each type of containers calculation - logged in required
                         if (isLoggedIn) {
-                            List<Containers> containersList = Containers.loadContainerFromFile("container.csv");
+                            List<Containers> containersList = Containers.loadContainersFromFile("container.dat");
                             Map<String, Double> typeToTotalWeightMap = new HashMap<>();
 
                             // Initialize typeToTotalWeightMap with 0.0 for each container type
@@ -398,7 +400,55 @@ public class Main {
                         break;
                     case 6:
                         // Refuel a vehicle - logged in required
-                        // Implement this functionality
+                        if (isLoggedIn) {
+                            System.out.println("Choose a Vehicle to Refuel:");
+                            System.out.println("1. Ship");
+                            System.out.println("2. Truck");
+                            System.out.print("Enter your choice: ");
+                            int vehicleChoice = getUserChoice();
+
+                            switch (vehicleChoice) {
+                                case 1:
+                                    // Refuel a Ship
+                                    if (loggedInUser instanceof PortManager) {
+                                        Ship ship = Ship.loadShip("ship.dat");
+                                        if (ship != null) {
+                                            // Refuel the ship
+                                            double fuelToAdd = promptForFuelAmount();
+                                            ship.refuel(fuelToAdd);
+                                            Ship.saveShip(ship, "ship.dat"); // Save the updated ship data
+                                            System.out.println("Ship refueled successfully.");
+                                        } else {
+                                            System.out.println("Failed to load ship data from File.");
+                                        }
+                                    } else {
+                                        System.out.println("You do not have permission to refuel ships.");
+                                    }
+                                    break;
+                                case 2:
+                                    // Refuel a Truck
+                                    if (loggedInUser instanceof PortManager) {
+                                        Truck truck = (Truck) Truck.loadTrucks("truck.dat");
+                                        if (truck != null) {
+                                            // Refuel the truck
+                                            double fuelToAdd = promptForFuelAmount();
+                                            truck.refuel(fuelToAdd);
+                                            Truck.saveTrucks((List<Truck>) truck, "truck.dat"); // Save the updated truck data
+                                            System.out.println("Truck refueled successfully.");
+                                        } else {
+                                            System.out.println("Failed to load truck data from File.");
+                                        }
+                                    } else {
+                                        System.out.println("You do not have permission to refuel trucks.");
+                                    }
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice. Please try again.");
+                                    break;
+                            }
+                        } else {
+                            System.out.println("You do not have permission to access this feature.");
+                        }
                         break;
                     case 7:
                         // List all ships in the port

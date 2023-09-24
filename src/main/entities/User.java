@@ -20,7 +20,6 @@ public abstract class User {
     private List<Vehicles> vehiclesUnderControl;
     private List<Ship> shipsUnderControl;
     private List<Trip> trips;
-    private List<Trip> tripsUnderControl;
 
     //constructor
     public User(String username, String password) {
@@ -59,10 +58,6 @@ public abstract class User {
 
     public List<Trip> getTrips() {
         return trips;
-    }
-
-    public List<Trip> getTripsUnderControl() {
-        return tripsUnderControl;
     }
 
     //setter

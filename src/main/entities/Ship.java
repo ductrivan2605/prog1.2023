@@ -13,15 +13,8 @@ import java.io.Serializable;
 public class Ship extends Vehicles {
     //constructor
     public Ship(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort) {
-        this.vehicleId = vehicleId;
-        this.name = name;
-        this.currentFuel = currentFuel;
-        this.carryingCapacity = carryingCapacity;
-        this.fuelCapacity = fuelCapacity;
-        this.currentPort = currentPort;
-        this.totalContainers = 0;
-        this.vehicleType = VehicleType.SHIP;
-        this.loadedContainers = new ArrayList<>();
+        super(vehicleId, name, currentFuel, carryingCapacity,fuelCapacity, currentPort);
+        super.setVehicleType(VehicleType.SHIP);
     }
 
     //Ship data loader
@@ -120,10 +113,21 @@ public static void saveAllShips(List<Ship> ships, String filename) {
         }
 
         if (canMoveToPort(targetPort)) {
-            // Implement the logic to move the ship to the target port
-            // You can update the current port and other relevant information
-            setCurrentPort(targetPort);
-            System.out.println("Ship " + getVehicleId() + " has moved to " + targetPort.getName() + ".");
+            // Calculate the distance to the target port using Haversine
+            double distance = distanceToTargetPort(targetPort);
+
+            // Check if the ship has enough fuel for the journey
+            double requiredFuel = calculateRequiredFuel(distance);
+            if (getCurrentFuel() >= requiredFuel) {
+                // Update the ship's current port to the target port
+                setCurrentPort(targetPort);
+                System.out.println("Ship " + getVehicleId() + " has moved to " + targetPort.getName() + ".");
+                System.out.println("Distance traveled: " + distance + " kilometers");
+                System.out.println("Fuel consumed: " + requiredFuel + " units");
+                setCurrentFuel(getCurrentFuel() - requiredFuel); // Deduct fuel
+            } else {
+                System.out.println("Ship " + getVehicleId() + " cannot move to " + targetPort.getName() + " due to insufficient fuel.");
+            }
         } else {
             System.out.println("Ship " + getVehicleId() + " cannot move to " + targetPort.getName() + " due to load capacity.");
         }
@@ -134,13 +138,7 @@ public static void saveAllShips(List<Ship> ships, String filename) {
         double loadedWeight = calculateLoadedContainerWeight();
 
         // Check if the target port has sufficient storing capacity
-        if (loadedWeight > targetPort.getStoringCapacity()) {
-            return false;
-        }
-
-        // You can add additional conditions specific to ships if needed
-
-        return true;
+        return !(loadedWeight > targetPort.getStoringCapacity());
     }
 
     private double calculateLoadedContainerWeight() {
