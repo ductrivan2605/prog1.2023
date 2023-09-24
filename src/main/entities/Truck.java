@@ -1,13 +1,8 @@
 package main.entities;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.Serializable;
+import java.io.*;
+import java.util.*;
+
 public class Truck implements Vehicles, Serializable {
     private String vehicleId;
     private String name;

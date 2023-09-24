@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import main.entities.Admin;
+import main.entities.Port;
 import main.entities.PortManager;
 import main.entities.User;
 
@@ -45,7 +46,6 @@ public class Main {
                 // If logged in, display the main menu and handle menu choices
                 displayMainMenu();
                 int choice = getUserChoice(scanner);
-
                 switch (choice) {
                     case 1:
                         // Manage Vehicles

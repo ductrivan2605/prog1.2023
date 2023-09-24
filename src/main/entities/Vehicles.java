@@ -1,31 +1,79 @@
 package main.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface Vehicles {
-    String getVehicleId();
+public abstract class Vehicles {
 
-    void setVehicleId(String vehicleId);
+    private String vehicleId;
+    private String name;
+    private double currentFuel;
+    private double carryingCapacity;
+    private double fuelCapacity;
+    private Port currentPort;
+    private int totalContainers;
+    private VehicleType vehicleType;
+    private List<Containers> loadedContainers;
 
-    String getName();
+    public Vehicles(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort) {
+        this.vehicleId = vehicleId;
+        this.name = name;
+        this.currentFuel = currentFuel;
+        this.carryingCapacity = carryingCapacity;
+        this.fuelCapacity = fuelCapacity;
+        this.currentPort = currentPort;
+        this.totalContainers = 0;
+        this.vehicleType = VehicleType.SHIP;
+        this.loadedContainers = new ArrayList<>();
+    }
 
-    void setName(String name);
+    public String getVehicleId() {
+        return vehicleId;
+    }
 
-    double getCurrentFuel();
+    public void setVehicleId(String vehicleId) {
+        this.vehicleId = vehicleId;
+    }
 
-    void setCurrentFuel(double currentFuel);
+    public String getName() {
+        return name;
+    }
 
-    double getCarryingCapacity();
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    void setCarryingCapacity(double carryingCapacity);
+    public double getCurrentFuel() {
+        return currentFuel;
+    }
 
-    double getFuelCapacity();
+    public void setCurrentFuel(double currentFuel) {
+        this.currentFuel = currentFuel;
+    }
 
-    void setFuelCapacity(double fuelCapacity);
+    public double getCarryingCapacity() {
+        return carryingCapacity;
+    }
 
-    Port getCurrentPort();
+    public void setCarryingCapacity(double carryingCapacity) {
+        this.carryingCapacity = carryingCapacity;
+    }
 
-    void setCurrentPort(Port currentPort);
+    public double getFuelCapacity() {
+        return fuelCapacity;
+    }
+
+    public void setFuelCapacity(double fuelCapacity) {
+        this.fuelCapacity = fuelCapacity;
+    }
+
+    public Port getCurrentPort() {
+        return currentPort;
+    }
+
+    public void setCurrentPort(Port currentPort) {
+        this.currentPort = currentPort;
+    }
 
     public int getTotalContainers() {
         return totalContainers;

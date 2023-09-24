@@ -1,13 +1,7 @@
 package main.entities;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import main.entities.Vehicles.VehicleType;
 
@@ -26,6 +20,7 @@ public class Port {
     private Set<VehicleType> allowedVehicleTypes = new HashSet<>();
     private PortManager portManager;
 
+    //constructor
     public Port(String id, String name, double latitude, double longitude, double storingCapacity, boolean landingAbility) {
         this.id = id;
         this.name = name;

@@ -1,8 +1,7 @@
 package main.entities;
 
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
-import java.time.LocalDate;
 
 import main.entities.Containers.ContainerType;
 
@@ -22,6 +21,7 @@ public abstract class User {
     private List<Trip> trips;
     private List<Trip> tripsUnderControl;
 
+    //constructor
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -31,6 +31,7 @@ public abstract class User {
         this.tripsUnderControl = new ArrayList<>();
     }
 
+    //getters
     public String getUsername(){
         return username;
     }
@@ -59,15 +60,12 @@ public abstract class User {
         return tripsUnderControl;
     }
 
+    //setter
     public void setUserRole(String userRole) {
         this.userRole = userRole;
     }
 
     public abstract boolean hasPermission(Operation operation);
-
-    public abstract double calculateDailyFuelConsumption();
-
-    public abstract List<Trip> listTripsInDay(Date date);
 
     public List<Ship> listAllShipsInPort(Port port) {
         List<Ship> shipsInPort = new ArrayList<>();

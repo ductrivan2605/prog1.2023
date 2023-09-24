@@ -12,11 +12,13 @@ import java.util.Scanner;
 import main.entities.Containers.ContainerType;
 
 public class Admin extends User {
+    //constructor
     public Admin(String username, String password) {
         super(username, password);
         super.setUserRole("Admin");
     }
 
+    //method
     @Override
     public boolean hasPermission(Operation operation) {
         // Admin has permission for all operations

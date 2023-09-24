@@ -1,36 +1,12 @@
 package main.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.util.*;
+import java.io.*;
 
-public class Ship implements Vehicles, Serializable {
-    private String vehicleId;
-    private String name;
-    private double currentFuel;
-    private double carryingCapacity;
-    private double fuelCapacity;
-    private Port currentPort;
-    private int totalContainers;
-    private VehicleType vehicleType;
-    private List<Containers> loadedContainers;
+public class Ship extends Vehicles implements Serializable {
 
     public Ship(String vehicleId, String name, double currentFuel, double carryingCapacity, double fuelCapacity, Port currentPort) {
-        this.vehicleId = vehicleId;
-        this.name = name;
-        this.currentFuel = currentFuel;
-        this.carryingCapacity = carryingCapacity;
-        this.fuelCapacity = fuelCapacity;
-        this.currentPort = currentPort;
-        this.totalContainers = 0;
-        this.vehicleType = VehicleType.SHIP;
-        this.loadedContainers = new ArrayList<>();
+        super(vehicleId, name, currentFuel, carryingCapacity, fuelCapacity, currentPort);
     }
 
     //Ship data loader
