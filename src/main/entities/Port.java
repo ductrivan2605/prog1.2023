@@ -109,7 +109,6 @@ public static void deletePort(List<Port> ports, String portId, String filePath) 
             break;
         }
     }
-
     // If the port is found, remove it from the list
     if (portToDelete != null) {
         ports.remove(portToDelete);
